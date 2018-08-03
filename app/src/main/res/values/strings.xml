@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">FridgeManager</string>
+    <string name="welcome_text">Fridge Manager</string>
+    <string name="fridge_button">Fridge</string>
+    <string name="recipe_button">Recipes</string>
+    <string name="grocery_button">Groceries</string>
+    <string name="ingredient_button">Ingredients</string>
+    <string name="placeholder"> </string>
+</resources>
