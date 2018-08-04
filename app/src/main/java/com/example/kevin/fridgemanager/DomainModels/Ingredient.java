@@ -1,4 +1,4 @@
-package DomainModels;
+package com.example.kevin.fridgemanager.DomainModels;
 
 public class Ingredient {
     private String name;

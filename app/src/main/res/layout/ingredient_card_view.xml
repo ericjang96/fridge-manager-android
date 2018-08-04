@@ -17,7 +17,7 @@
             android:padding="16dp">
 
             <ImageView
-                android:id="@+id/person_photo"
+                android:id="@+id/ingredient_photo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
@@ -27,18 +27,20 @@
 
             <TextView
                 android:id="@+id/ingredient_name"
-                android:layout_width="wrap_content"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_toRightOf="@+id/person_photo"
-                android:textSize="30sp" />
+                android:layout_toRightOf="@+id/ingredient_photo"
+                android:maxLines="2"
+                android:textSize="26sp" />
 
             <TextView
                 android:id="@+id/ingredient_amount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/ingredient_name"
-                android:layout_toRightOf="@+id/person_photo" />
+                android:layout_alignParentEnd="true"
+                android:layout_alignTop="@+id/ingredient_photo"
+                android:textSize="26sp" />
 
         </RelativeLayout>
 

@@ -1,4 +1,4 @@
-package Adapters;
+package com.example.kevin.fridgemanager.Adapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
@@ -10,15 +10,16 @@ import android.widget.TextView;
 
 import com.example.kevin.fridgemanager.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import DomainModels.Ingredient;
+import com.example.kevin.fridgemanager.DomainModels.Ingredient;
 
 
-public class RVAdapter extends RecyclerView.Adapter<RVAdapter.IngredientViewHolder> {
-    List<Ingredient> ingredients;
+public class FridgeAdapter extends RecyclerView.Adapter<FridgeAdapter.IngredientViewHolder> {
+    private List<Ingredient> ingredients;
 
-    public RVAdapter(List<Ingredient> ingredients){
+    public FridgeAdapter(List<Ingredient> ingredients){
         this.ingredients = ingredients;
     }
 
@@ -39,14 +40,19 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.IngredientViewHold
     @Override
     public IngredientViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.ingredient_card_view, viewGroup, false);
-        IngredientViewHolder ivh = new IngredientViewHolder(v);
-        return ivh;
+        return new IngredientViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(@NonNull IngredientViewHolder holder, int i) {
         Ingredient currentIngred = ingredients.get(i);
-        String amountText = currentIngred.getAmount() + " " + currentIngred.getUnit();
+        String amountText;
+        if(currentIngred.getUnit().equals("number")){
+            amountText = String.valueOf(currentIngred.getAmount());
+        }
+        else{
+            amountText = currentIngred.getAmount() + " " + currentIngred.getUnit();
+        }
 
         holder.ingredName.setText(currentIngred.getName());
         holder.ingredAmount.setText(amountText);
@@ -58,7 +64,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.IngredientViewHold
     }
 
     @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
     }
 }
