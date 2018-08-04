@@ -4,6 +4,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import com.example.kevin.fridgemanager.DomainModels.Ingredient;
 import com.example.kevin.fridgemanager.R;
@@ -25,6 +27,11 @@ public class FridgeActivity extends AppCompatActivity {
         rv.setLayoutManager(llm);
 
         // Get fridge data
+        FridgeRestClient.getFridgeData(rv);
+    }
+
+    public void refresh(View view){
+        RecyclerView rv = findViewById(R.id.rv);
         FridgeRestClient.getFridgeData(rv);
     }
 }
