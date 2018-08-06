@@ -6,4 +6,6 @@
     <string name="grocery_button">Groceries</string>
     <string name="ingredient_button">Ingredients</string>
     <string name="placeholder"> </string>
+    <string name="defaultBoughtDate">2018–08–06</string>
+    <string name="defaultExpiryDate">2018–08–20</string>
 </resources>

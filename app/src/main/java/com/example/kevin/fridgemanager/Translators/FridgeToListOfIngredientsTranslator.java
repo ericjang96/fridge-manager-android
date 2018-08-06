@@ -21,7 +21,7 @@ public class FridgeToListOfIngredientsTranslator {
             Integer amount = val.getInt("amount");
             String unit = val.getString("amountUnit");
 
-            Ingredient ingredient = new Ingredient(name, amount, unit);
+            Ingredient ingredient = new Ingredient(name, unit, amount);
             result.add(ingredient);
         }
 
