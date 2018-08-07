@@ -20,6 +20,7 @@ import com.example.kevin.fridgemanager.REST.FridgeRestClient;
 
 import static com.loopj.android.http.AsyncHttpClient.log;
 
+// TODO: Make a sharedPreferences file that is always up-to-date for offline mode. Once we have internet connection, push/pull to server
 
 public class FridgeActivity extends AppCompatActivity {
     private EditText nameView;
@@ -41,6 +42,7 @@ public class FridgeActivity extends AppCompatActivity {
 
         View loading = findViewById(R.id.fridgeLoadingPanel);
         // Get fridge data
+        // TODO: We should ping the server to see if we have a connection, and only make this call if we do. Otherwise, we should fall back to offline storage
         FridgeRestClient.getFridgeData(rv, loading);
 
 
