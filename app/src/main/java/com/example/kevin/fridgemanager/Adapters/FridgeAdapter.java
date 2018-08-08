@@ -15,7 +15,7 @@ import java.util.List;
 
 import com.example.kevin.fridgemanager.DomainModels.Ingredient;
 
-
+// Adapter used for the recycler view that displays all ingredients in a fridge
 public class FridgeAdapter extends RecyclerView.Adapter<FridgeAdapter.IngredientViewHolder> {
     private List<Ingredient> ingredients;
 
@@ -23,7 +23,9 @@ public class FridgeAdapter extends RecyclerView.Adapter<FridgeAdapter.Ingredient
         this.ingredients = ingredients;
     }
 
-    public static class IngredientViewHolder extends RecyclerView.ViewHolder {
+    // Ingredient view holder that references the card view defined to hold one ingredient item
+    // class defined within scope of the package
+    static class IngredientViewHolder extends RecyclerView.ViewHolder {
         CardView cv;
         TextView ingredName;
         TextView ingredAmount;
@@ -36,6 +38,7 @@ public class FridgeAdapter extends RecyclerView.Adapter<FridgeAdapter.Ingredient
         }
     }
 
+    // Return the view holder once created
     @NonNull
     @Override
     public IngredientViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
@@ -43,6 +46,7 @@ public class FridgeAdapter extends RecyclerView.Adapter<FridgeAdapter.Ingredient
         return new IngredientViewHolder(v);
     }
 
+    // This method defines the way each ingredient data from the list should bind with the view holder
     @Override
     public void onBindViewHolder(@NonNull IngredientViewHolder holder, int i) {
         Ingredient currentIngred = ingredients.get(i);

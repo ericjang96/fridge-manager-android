@@ -1,18 +1,17 @@
+/*
+Created by Kevin Kwon on August 1 2018
+ */
 package com.example.kevin.fridgemanager.Activities;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.example.kevin.fridgemanager.DomainModels.Ingredient;
 import com.example.kevin.fridgemanager.R;
@@ -29,6 +28,9 @@ public class FridgeActivity extends AppCompatActivity {
     private EditText unitView;
     private EditText amountView;
 
+    private AlertDialog sendRequestDialog;
+
+    // Overridden on create method that initializes the required components in our Fridge Activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,10 +46,9 @@ public class FridgeActivity extends AppCompatActivity {
         // Get fridge data
         // TODO: We should ping the server to see if we have a connection, and only make this call if we do. Otherwise, we should fall back to offline storage
         FridgeRestClient.getFridgeData(rv, loading);
-
-
     }
 
+    // Refresh the list of ingredients shown in our fridge by sending a new GET request
     public void refresh(View view) {
         RecyclerView rv = findViewById(R.id.rv);
         View loading = findViewById(R.id.fridgeLoadingPanel);
@@ -56,9 +57,11 @@ public class FridgeActivity extends AppCompatActivity {
         FridgeRestClient.getFridgeData(rv, loading);
     }
 
+    //
     public void showAddIngredientPrompt(View view){
         Context context = view.getContext();
-        // get prompts.xml view
+
+        // get add_ingredient_prompt.xml view
         LayoutInflater li = LayoutInflater.from(context);
         View promptsView = li.inflate(R.layout.add_ingredient_prompt, null);
 
@@ -68,17 +71,15 @@ public class FridgeActivity extends AppCompatActivity {
         unitView = promptsView.findViewById(R.id.edit_ingredient_amountUnit);
         amountView = promptsView.findViewById(R.id.edit_ingredient_amount);
 
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+        AlertDialog.Builder builder = new AlertDialog.Builder(
                 context);
 
-        // set prompts.xml to alertdialog builder
-        alertDialogBuilder.setView(promptsView);
+        // set add_ingredient_prompt.xml to alertdialog builder
+        builder.setView(promptsView);
 
-        // create alert dialog
-        AlertDialog alertDialog = alertDialogBuilder.create();
-
-        // show it
-        alertDialog.show();
+        // create alert dialog and show
+        sendRequestDialog = builder.create();
+        sendRequestDialog.show();
     }
 
     public void sendIngredientRequest(View view){
@@ -92,11 +93,20 @@ public class FridgeActivity extends AppCompatActivity {
             Integer amountInt = Integer.parseInt(amount);
 
             Ingredient ingredient = new Ingredient(name, boughtDate, expiryDate, amountUnit, amountInt);
-            FridgeRestClient.putFridgeData(ingredient);
+            FridgeRestClient.insertIngredientData(ingredient);
+            sendRequestDialog.cancel();
+
+            LayoutInflater li = LayoutInflater.from(view.getContext());
+            refreshWithoutLoading(li.inflate(R.layout.activity_fridge, null));
         }
         catch(Exception e){
             log.e("ERROR", e.getMessage());
         }
+    }
 
+    public void refreshWithoutLoading(View view){
+        RecyclerView rv = findViewById(R.id.rv);
+        View loading = findViewById(R.id.fridgeLoadingPanel);
+        FridgeRestClient.getFridgeData(rv, loading);
     }
 }

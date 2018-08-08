@@ -1,3 +1,6 @@
+/*
+Created by Kevin Kwon on July 31 2018
+ */
 package com.example.kevin.fridgemanager.Activities;
 
 import android.content.Intent;

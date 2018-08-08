@@ -64,13 +64,14 @@ public class FridgeRestClient {
         });
     }
 
-    public static void putFridgeData(Ingredient ingredient){
+    public static void insertIngredientData(Ingredient ingredient){
         RequestParams params = new RequestParams();
         params.add("name", ingredient.getName());
         params.add("boughtDate", ingredient.getBoughtDate());
         params.add("expiryDate", ingredient.getExpiryDate());
         params.add("amountUnit", ingredient.getUnit());
         params.add("amount", ingredient.getAmountString());
+        params.add("type", "insert");
 
         put("/fridges/ingredients", params, new JsonHttpResponseHandler(){
             @Override
