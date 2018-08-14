@@ -3,26 +3,21 @@ Created by Kevin Kwon on August 1 2018
  */
 package com.example.kevin.fridgemanager.Activities;
 
-import android.content.Context;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.EditText;
 
-import com.example.kevin.fridgemanager.DomainModels.Ingredient;
 import com.example.kevin.fridgemanager.Fragments.AddIngredientDialogFragment;
 import com.example.kevin.fridgemanager.R;
 import com.example.kevin.fridgemanager.REST.FridgeRestClient;
 
-import static com.loopj.android.http.AsyncHttpClient.log;
-
 // TODO: Make a sharedPreferences file that is always up-to-date for offline mode. Once we have internet connection, push/pull to server
 
 public class FridgeActivity extends AppCompatActivity {
+    private static final String TAG = "FridgeActivity";
+
     // Overridden on create method that initializes the required components in our Fridge Activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +48,7 @@ public class FridgeActivity extends AppCompatActivity {
     //
     public void showAddIngredientPrompt(View view){
         AddIngredientDialogFragment dialog = new AddIngredientDialogFragment();
-        dialog.show(getSupportFragmentManager(), "My Dialog");
+        dialog.show(getSupportFragmentManager(), "Add Ingredient Dialog");
     }
 
 }

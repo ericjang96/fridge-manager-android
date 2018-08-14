@@ -56,7 +56,7 @@ public class FridgeRestClient {
                 catch (JSONException e) {
                     e.printStackTrace();
                 }
-                FridgeAdapter adapter = new FridgeAdapter(ingredients);
+                FridgeAdapter adapter = new FridgeAdapter(ingredients, rv.getContext());
                 rv.setAdapter(adapter);
                 rv.setVisibility(View.VISIBLE);
                 loading.setVisibility(View.INVISIBLE);

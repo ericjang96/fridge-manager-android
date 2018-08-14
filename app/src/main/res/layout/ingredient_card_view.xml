@@ -45,7 +45,7 @@
                 android:textSize="18sp" />
 
             <Button
-                android:id="@+id/add_ingredient"
+                android:id="@+id/add_ingredient_button"
                 style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="56dp"
                 android:layout_height="56dp"
@@ -54,7 +54,7 @@
                 android:background="@drawable/ic_add_circle_green_24dp" />
 
             <Button
-                android:id="@+id/remove_ingredient"
+                android:id="@+id/remove_ingredient_button"
                 style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="56dp"
                 android:layout_height="56dp"

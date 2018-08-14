@@ -1,13 +1,18 @@
 package com.example.kevin.fridgemanager.Adapters;
 
+import android.app.Activity;
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.kevin.fridgemanager.Activities.FridgeActivity;
+import com.example.kevin.fridgemanager.Fragments.EditIngredientDialogFragment;
 import com.example.kevin.fridgemanager.R;
 
 import java.util.ArrayList;
@@ -17,24 +22,30 @@ import com.example.kevin.fridgemanager.DomainModels.Ingredient;
 
 // Adapter used for the recycler view that displays all ingredients in a fridge
 public class FridgeAdapter extends RecyclerView.Adapter<FridgeAdapter.IngredientViewHolder> {
+    //vars
     private List<Ingredient> ingredients;
+    private Context context;
 
-    public FridgeAdapter(List<Ingredient> ingredients){
+    public FridgeAdapter(List<Ingredient> ingredients, Context context){
         this.ingredients = ingredients;
+        this.context = context;
     }
 
     // Ingredient view holder that references the card view defined to hold one ingredient item
     // class defined within scope of the package
     static class IngredientViewHolder extends RecyclerView.ViewHolder {
-        CardView cv;
-        TextView ingredName;
-        TextView ingredAmount;
+        //widgets
+        CardView mCardView;
+        TextView mIngredientName, mIngredientAmount;
+        Button mInsertButton, mRemoveButton;
 
         IngredientViewHolder(View itemView) {
             super(itemView);
-            cv = itemView.findViewById(R.id.cv);
-            ingredName = itemView.findViewById(R.id.ingredient_name);
-            ingredAmount = itemView.findViewById(R.id.ingredient_amount);
+            mCardView = itemView.findViewById(R.id.cv);
+            mIngredientName = itemView.findViewById(R.id.ingredient_name);
+            mIngredientAmount = itemView.findViewById(R.id.ingredient_amount);
+            mInsertButton = itemView.findViewById(R.id.add_ingredient_button);
+            mRemoveButton = itemView.findViewById(R.id.remove_ingredient_button);
         }
     }
 
@@ -58,8 +69,26 @@ public class FridgeAdapter extends RecyclerView.Adapter<FridgeAdapter.Ingredient
             amountText = currentIngred.getAmount() + " " + currentIngred.getUnit();
         }
 
-        holder.ingredName.setText(currentIngred.getName());
-        holder.ingredAmount.setText(amountText);
+        holder.mIngredientName.setText(currentIngred.getName());
+        holder.mIngredientAmount.setText(amountText);
+
+        holder.mInsertButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EditIngredientDialogFragment editDialog = EditIngredientDialogFragment.newInstance("insert");
+                FridgeActivity activity = (FridgeActivity) context;
+                editDialog.show(activity.getSupportFragmentManager(), "edit dialog");
+            }
+        });
+
+        holder.mRemoveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EditIngredientDialogFragment editDialog = EditIngredientDialogFragment.newInstance("remove");
+                FridgeActivity activity = (FridgeActivity) context;
+                editDialog.show(activity.getSupportFragmentManager(), "edit dialog");
+            }
+        });
     }
 
     @Override
