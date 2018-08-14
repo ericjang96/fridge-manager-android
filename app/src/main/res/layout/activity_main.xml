@@ -6,79 +6,79 @@
     android:layout_height="match_parent"
     tools:context=".Activities.MainActivity">
 
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="325dp"
+        android:layout_height="80dp"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="52dp"
+        android:fontFamily="@font/open_sans_light"
+        android:text="@string/welcome_text"
+        android:textSize="46sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="252dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="130dp">
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="325dp"
-                android:layout_height="80dp"
-                android:layout_centerInParent="true"
-                android:fontFamily="@font/open_sans_light"
-                android:text="@string/welcome_text"
-                android:textSize="46sp" />
-
-        </RelativeLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/go_to_fridge_button"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_marginStart="55dp"
-                android:layout_weight="1"
-                android:background="#4e51ee"
-                android:onClick="goToFridge"
-                android:text="@string/fridge_button"/>
-
-            <Button
-                android:id="@+id/go_to_groceries_button"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_marginEnd="44dp"
-                android:layout_weight="1"
-                android:background="#4143c7"
-                android:text="@string/grocery_button"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="231dp"
+        <Button
+            android:id="@+id/go_to_fridge_button"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginStart="55dp"
             android:layout_weight="1"
-            android:orientation="horizontal">
+            android:background="#4e51ee"
+            android:onClick="goToFridge"
+            android:text="@string/fridge_button" />
 
-            <Button
-                android:id="@+id/go_to_recipes_button"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_marginStart="55dp"
-                android:layout_weight="1"
-                android:background="#5e61f8"
-                android:text="@string/recipe_button"/>
+        <Button
+            android:id="@+id/go_to_groceries_button"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginEnd="44dp"
+            android:layout_weight="1"
+            android:background="#4143c7"
+            android:text="@string/grocery_button" />
 
-            <Button
-                android:id="@+id/go_to_ingredients_button"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_marginEnd="44dp"
-                android:layout_weight="1"
-                android:background="#474ae1"
-                android:text="@string/ingredient_button" />
-        </LinearLayout>
+    </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.789">
+
+        <Button
+            android:id="@+id/go_to_recipes_button"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginStart="55dp"
+            android:layout_weight="1"
+            android:background="#5e61f8"
+            android:text="@string/recipe_button" />
+
+        <Button
+            android:id="@+id/go_to_ingredients_button"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginEnd="44dp"
+            android:layout_weight="1"
+            android:background="#474ae1"
+            android:text="@string/ingredient_button" />
     </LinearLayout>
 
 
