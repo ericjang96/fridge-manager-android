@@ -1,11 +1,9 @@
 package com.example.kevin.fridgemanager.REST;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 
-import com.example.kevin.fridgemanager.Activities.FridgeActivity;
-import com.example.kevin.fridgemanager.Adapters.FridgeAdapter;
+import com.example.kevin.fridgemanager.Adapters.IngredientsViewAdapter;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -14,7 +12,6 @@ import com.loopj.android.http.RequestParams;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.example.kevin.fridgemanager.DomainModels.Ingredient;
@@ -34,6 +31,7 @@ public class FridgeRestClient {
     private static void put(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         client.put(getAbsoluteUrl(url), params, responseHandler);
     }
+
 
     private static String getAbsoluteUrl(String relativeUrl) {
         return BASE_URL + relativeUrl;
@@ -56,7 +54,7 @@ public class FridgeRestClient {
                 catch (JSONException e) {
                     e.printStackTrace();
                 }
-                FridgeAdapter adapter = new FridgeAdapter(ingredients, rv.getContext());
+                IngredientsViewAdapter adapter = new IngredientsViewAdapter(ingredients, rv.getContext());
                 rv.setAdapter(adapter);
                 rv.setVisibility(View.VISIBLE);
                 loading.setVisibility(View.INVISIBLE);

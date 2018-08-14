@@ -1,5 +1,6 @@
 package com.example.kevin.fridgemanager.Fragments;
 
+
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.kevin.fridgemanager.Activities.FridgeActivity;
 import com.example.kevin.fridgemanager.DomainModels.Ingredient;
 import com.example.kevin.fridgemanager.R;
 import com.example.kevin.fridgemanager.REST.FridgeRestClient;
@@ -21,7 +23,6 @@ public class AddIngredientDialogFragment extends DialogFragment {
 
     //widgets
     private EditText mEditIngredientName, mEditBoughtDate, mEditExpiryDate, mEditUnit, mEditAmount;
-    private Button mSendRequestButton, mCancelButton;
 
     @Nullable
     @Override
@@ -33,8 +34,8 @@ public class AddIngredientDialogFragment extends DialogFragment {
         mEditUnit = view.findViewById(R.id.edit_ingredient_amountUnit);
         mEditAmount = view.findViewById(R.id.edit_ingredient_amount);
 
-        mSendRequestButton = view.findViewById(R.id.send_ingredient_request_button);
-        mCancelButton = view.findViewById(R.id.cancel_add_ingredient_prompt_button);
+        Button mSendRequestButton = view.findViewById(R.id.send_ingredient_request_button);
+        Button mCancelButton = view.findViewById(R.id.cancel_add_ingredient_prompt_button);
 
         mCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,8 +61,7 @@ public class AddIngredientDialogFragment extends DialogFragment {
                     FridgeRestClient.insertIngredientData(ingredient);
                     getDialog().dismiss();
 
-                    LayoutInflater li = LayoutInflater.from(view.getContext());
-                    refreshWithoutLoading(li.inflate(R.layout.activity_fridge, null));
+                    ((FridgeActivity)getActivity()).updateItemAmount(name, amount);
                 }
                 catch(Exception e){
                     Log.e(TAG, "sendIngredientRequest: " + e.getMessage());
@@ -73,7 +73,7 @@ public class AddIngredientDialogFragment extends DialogFragment {
     }
 
     public void refreshWithoutLoading(View view){
-        RecyclerView rv = view.findViewById(R.id.rv);
+        RecyclerView rv = view.findViewById(R.id.recycler_view_ingredients);
         View loading = view.findViewById(R.id.fridgeLoadingPanel);
         FridgeRestClient.getFridgeData(rv, loading);
     }

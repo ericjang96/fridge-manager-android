@@ -1,6 +1,5 @@
 package com.example.kevin.fridgemanager.Adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
@@ -15,35 +14,37 @@ import com.example.kevin.fridgemanager.Activities.FridgeActivity;
 import com.example.kevin.fridgemanager.Fragments.EditIngredientDialogFragment;
 import com.example.kevin.fridgemanager.R;
 
-import java.util.ArrayList;
+import java.lang.reflect.Field;
 import java.util.List;
 
 import com.example.kevin.fridgemanager.DomainModels.Ingredient;
 
 // Adapter used for the recycler view that displays all ingredients in a fridge
-public class FridgeAdapter extends RecyclerView.Adapter<FridgeAdapter.IngredientViewHolder> {
+public class IngredientsViewAdapter extends RecyclerView.Adapter<IngredientsViewAdapter.IngredientViewHolder> {
     //vars
     private List<Ingredient> ingredients;
     private Context context;
 
-    public FridgeAdapter(List<Ingredient> ingredients, Context context){
+    public IngredientsViewAdapter(List<Ingredient> ingredients, Context context){
         this.ingredients = ingredients;
         this.context = context;
     }
 
+
     // Ingredient view holder that references the card view defined to hold one ingredient item
     // class defined within scope of the package
-    static class IngredientViewHolder extends RecyclerView.ViewHolder {
+    protected static class IngredientViewHolder extends RecyclerView.ViewHolder {
         //widgets
         CardView mCardView;
-        TextView mIngredientName, mIngredientAmount;
+        TextView mIngredientName, mIngredientAmount, mIngredientUnit;
         Button mInsertButton, mRemoveButton;
 
         IngredientViewHolder(View itemView) {
             super(itemView);
-            mCardView = itemView.findViewById(R.id.cv);
+            mCardView = itemView.findViewById(R.id.ingredient_card_view);
             mIngredientName = itemView.findViewById(R.id.ingredient_name);
             mIngredientAmount = itemView.findViewById(R.id.ingredient_amount);
+            mIngredientUnit = itemView.findViewById(R.id.ingredient_unit);
             mInsertButton = itemView.findViewById(R.id.add_ingredient_button);
             mRemoveButton = itemView.findViewById(R.id.remove_ingredient_button);
         }
@@ -52,25 +53,44 @@ public class FridgeAdapter extends RecyclerView.Adapter<FridgeAdapter.Ingredient
     // Return the view holder once created
     @NonNull
     @Override
-    public IngredientViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.ingredient_card_view, viewGroup, false);
+    public IngredientViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int position) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.ingredient_card_view, parent, false);
         return new IngredientViewHolder(v);
     }
 
-    // This method defines the way each ingredient data from the list should bind with the view holder
+
+    // Update a part of view holder you are interested in
     @Override
-    public void onBindViewHolder(@NonNull IngredientViewHolder holder, int i) {
-        Ingredient currentIngred = ingredients.get(i);
-        String amountText;
-        if(currentIngred.getUnit().equals("number")){
-            amountText = String.valueOf(currentIngred.getAmount());
+    public void onBindViewHolder(@NonNull IngredientViewHolder holder, int position, @NonNull List<Object> payloads) {
+        if(!payloads.isEmpty()) {
+            String amt = payloads.get(0).toString();
+            Integer originalValue = Integer.parseInt(holder.mIngredientAmount.getText().toString());
+            Integer additionalValue = Integer.parseInt(amt);
+            holder.mIngredientAmount.setText(String.valueOf(originalValue + additionalValue));
         }
-        else{
-            amountText = currentIngred.getAmount() + " " + currentIngred.getUnit();
+        else {
+            super.onBindViewHolder(holder,position, payloads);
+        }
+    }
+
+
+    // This method defines the way each ingredient data from the list should bind with the view holder
+    // Used to update the whole recycler view
+    @Override
+    public void onBindViewHolder(@NonNull IngredientViewHolder holder, int position) {
+        Ingredient currentIngred = ingredients.get(position);
+        String name = currentIngred.getName();
+        int amount = currentIngred.getAmount();
+        String unit = currentIngred.getUnit();
+
+        // Don't display "number"
+        if(unit.equals("number")){
+            unit = "";
         }
 
-        holder.mIngredientName.setText(currentIngred.getName());
-        holder.mIngredientAmount.setText(amountText);
+        holder.mIngredientName.setText(name);
+        holder.mIngredientAmount.setText(String.valueOf(amount));
+        holder.mIngredientUnit.setText(unit);
 
         holder.mInsertButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,5 +119,9 @@ public class FridgeAdapter extends RecyclerView.Adapter<FridgeAdapter.Ingredient
     @Override
     public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
+    }
+
+    public List<Ingredient> getIngredients(){
+        return ingredients;
     }
 }
