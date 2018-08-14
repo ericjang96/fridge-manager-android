@@ -6,20 +6,19 @@
     android:layout_height="wrap_content">
 
     <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/cv"
-        >
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:padding="16dp">
 
             <ImageView
                 android:id="@+id/ingredient_photo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginRight="16dp"
@@ -27,22 +26,46 @@
 
             <TextView
                 android:id="@+id/ingredient_name"
-                android:layout_width="150dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_toRightOf="@+id/ingredient_photo"
+                android:layout_alignStart="@+id/ingredient_amount"
+                android:layout_alignTop="@+id/ingredient_photo"
+                android:layout_marginTop="10dp"
                 android:maxLines="2"
                 android:textSize="26sp" />
 
             <TextView
                 android:id="@+id/ingredient_amount"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/ingredient_photo"
+                android:layout_alignParentStart="true"
+                android:layout_marginBottom="5dp"
+                android:layout_marginStart="119dp"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/add_ingredient"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_alignStart="@+id/ingredient_name"
+                android:layout_below="@+id/ingredient_photo"
+                android:background="@drawable/ic_add_circle_green_24dp" />
+
+            <Button
+                android:id="@+id/remove_ingredient"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
                 android:layout_alignParentEnd="true"
-                android:layout_alignTop="@+id/ingredient_photo"
-                android:textSize="26sp" />
+                android:layout_below="@+id/ingredient_photo"
+                android:layout_marginEnd="80dp"
+                android:background="@drawable/ic_remove_circle_red_24dp" />
+
 
         </RelativeLayout>
+
 
     </android.support.v7.widget.CardView>
 

@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.example.kevin.fridgemanager.DomainModels.Ingredient;
+import com.example.kevin.fridgemanager.Fragments.AddIngredientDialogFragment;
 import com.example.kevin.fridgemanager.R;
 import com.example.kevin.fridgemanager.REST.FridgeRestClient;
 
@@ -22,14 +23,6 @@ import static com.loopj.android.http.AsyncHttpClient.log;
 // TODO: Make a sharedPreferences file that is always up-to-date for offline mode. Once we have internet connection, push/pull to server
 
 public class FridgeActivity extends AppCompatActivity {
-    private EditText nameView;
-    private EditText boughtDateView;
-    private EditText expiryDateView;
-    private EditText unitView;
-    private EditText amountView;
-
-    private AlertDialog sendRequestDialog;
-
     // Overridden on create method that initializes the required components in our Fridge Activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,54 +52,8 @@ public class FridgeActivity extends AppCompatActivity {
 
     //
     public void showAddIngredientPrompt(View view){
-        Context context = view.getContext();
-
-        // get add_ingredient_prompt.xml view
-        LayoutInflater li = LayoutInflater.from(context);
-        View promptsView = li.inflate(R.layout.add_ingredient_prompt, null);
-
-        nameView = promptsView.findViewById(R.id.edit_ingredient_name);
-        boughtDateView = promptsView.findViewById(R.id.edit_ingredient_boughtDate);
-        expiryDateView = promptsView.findViewById(R.id.edit_ingredient_expiryDate);
-        unitView = promptsView.findViewById(R.id.edit_ingredient_amountUnit);
-        amountView = promptsView.findViewById(R.id.edit_ingredient_amount);
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(
-                context);
-
-        // set add_ingredient_prompt.xml to alertdialog builder
-        builder.setView(promptsView);
-
-        // create alert dialog and show
-        sendRequestDialog = builder.create();
-        sendRequestDialog.show();
+        AddIngredientDialogFragment dialog = new AddIngredientDialogFragment();
+        dialog.show(getSupportFragmentManager(), "My Dialog");
     }
 
-    public void sendIngredientRequest(View view){
-        try{
-            String name = nameView.getText().toString();
-            String boughtDate = boughtDateView.getText().toString();
-            String expiryDate = expiryDateView.getText().toString();
-            String amountUnit = unitView.getText().toString();
-            String amount = amountView.getText().toString();
-
-            Integer amountInt = Integer.parseInt(amount);
-
-            Ingredient ingredient = new Ingredient(name, boughtDate, expiryDate, amountUnit, amountInt);
-            FridgeRestClient.insertIngredientData(ingredient);
-            sendRequestDialog.cancel();
-
-            LayoutInflater li = LayoutInflater.from(view.getContext());
-            refreshWithoutLoading(li.inflate(R.layout.activity_fridge, null));
-        }
-        catch(Exception e){
-            log.e("ERROR", e.getMessage());
-        }
-    }
-
-    public void refreshWithoutLoading(View view){
-        RecyclerView rv = findViewById(R.id.rv);
-        View loading = findViewById(R.id.fridgeLoadingPanel);
-        FridgeRestClient.getFridgeData(rv, loading);
-    }
 }

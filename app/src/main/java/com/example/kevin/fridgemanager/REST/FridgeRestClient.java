@@ -40,7 +40,7 @@ public class FridgeRestClient {
     }
 
     public static void getFridgeData(final RecyclerView rv, final View loading){
-        get("/fridges", null, new JsonHttpResponseHandler() {
+        get("/fridges/ingredients/view?fridge_id=dummy_fridge_id", null, new JsonHttpResponseHandler() {
             @Override
             public void onStart(){
                 System.out.println("Getting data...");
