@@ -1,11 +1,12 @@
 package com.example.kevin.fridgemanager.DomainModels;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Ingredient {
+public class Ingredient implements Serializable {
     private String name;
-    private String boughtDate;
-    private String expiryDate;
+    private Date boughtDate;
+    private Date expiryDate;
     private String amountUnit;
     private Integer amount;
 
@@ -15,7 +16,7 @@ public class Ingredient {
         amount = amt;
     }
 
-    public Ingredient(String name, String bought, String expire, String amtUnit, Integer amt){
+    public Ingredient(String name, Date bought, Date expire, String amtUnit, Integer amt){
         this.name = name;
         boughtDate = bought;
         expiryDate = expire;
@@ -27,11 +28,11 @@ public class Ingredient {
         return name;
     }
 
-    public String getBoughtDate(){
+    public Date getBoughtDate(){
         return boughtDate;
     }
 
-    public String getExpiryDate(){
+    public Date getExpiryDate(){
         return expiryDate;
     }
 

@@ -11,7 +11,7 @@ import android.view.View;
 
 import com.example.kevin.fridgemanager.Adapters.IngredientsViewAdapter;
 import com.example.kevin.fridgemanager.DomainModels.Ingredient;
-import com.example.kevin.fridgemanager.Fragments.AddIngredientDialogFragment;
+import com.example.kevin.fridgemanager.Fragments.AddNewIngredientDialogFragment;
 import com.example.kevin.fridgemanager.R;
 import com.example.kevin.fridgemanager.REST.FridgeRestClient;
 
@@ -22,6 +22,9 @@ import java.util.List;
 public class FridgeActivity extends AppCompatActivity {
     private static final String TAG = "FridgeActivity";
 
+    //widgets
+    private RecyclerView mRecyclerView;
+
     // Overridden on create method that initializes the required components in our Fridge Activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,14 +33,16 @@ public class FridgeActivity extends AppCompatActivity {
 
         // Grabbing the recycler view and setting it as a linear layout
         // making the page look like a normal scrollable list
-        RecyclerView rv = findViewById(R.id.recycler_view_ingredients);
-        LinearLayoutManager llm = new LinearLayoutManager(rv.getContext());
-        rv.setLayoutManager(llm);
+        mRecyclerView = findViewById(R.id.recycler_view_ingredients);
+        LinearLayoutManager llm = new LinearLayoutManager(mRecyclerView.getContext());
+        mRecyclerView.setLayoutManager(llm);
 
         View loading = findViewById(R.id.fridgeLoadingPanel);
+
         // Get fridge data
         // TODO: We should ping the server to see if we have a connection, and only make this call if we do. Otherwise, we should fall back to offline storage
-        FridgeRestClient.getFridgeData(rv, loading);
+        FridgeRestClient.getFridgeData(mRecyclerView, loading);
+        //TODO: Add an observer/listener so that after data is retrieved we can have global variables of adapter/list of ingredients
     }
 
     // Refresh the list of ingredients shown in our fridge by sending a new GET request
@@ -51,18 +56,33 @@ public class FridgeActivity extends AppCompatActivity {
 
     //
     public void showAddIngredientPrompt(View view){
-        AddIngredientDialogFragment dialog = new AddIngredientDialogFragment();
+        AddNewIngredientDialogFragment dialog = new AddNewIngredientDialogFragment();
         dialog.show(getSupportFragmentManager(), "Add Ingredient Dialog");
     }
 
-    public void updateItemAmount(String name, String amount){
-        RecyclerView rv = findViewById(R.id.recycler_view_ingredients);
-        IngredientsViewAdapter adapter = (IngredientsViewAdapter) rv.getAdapter();
+    // Obtain the recycler view, and the adapter. Get the ingredients and
+    // try to find position of ingredients. If found, update the amount. If not, return false
+    public boolean tryUpdateItemAmount(String name, String amount){
+        IngredientsViewAdapter adapter = (IngredientsViewAdapter) mRecyclerView.getAdapter();
         assert adapter != null;
         List<Ingredient> ingredients = adapter.getIngredients();
+        int position = findPositionByName(ingredients, name);
+
+        // Not found
+        if(position == -1){
+            return false;
+        }
+
         adapter.notifyItemChanged(findPositionByName(ingredients, name), amount);
+        return true;
     }
 
+    public void addIngredient(Ingredient ingredient){
+        IngredientsViewAdapter adapter = (IngredientsViewAdapter) mRecyclerView.getAdapter();
+        assert adapter != null;
+        List<Ingredient> ingredients = adapter.getIngredients();
+        ingredients.add(ingredient);
+    }
 
     // finds position of ingredient in the list. If not found, return -1
     public int findPositionByName(List<Ingredient> list, String name){

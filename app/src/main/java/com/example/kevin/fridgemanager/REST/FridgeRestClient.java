@@ -12,6 +12,8 @@ import com.loopj.android.http.RequestParams;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import com.example.kevin.fridgemanager.DomainModels.Ingredient;
@@ -63,10 +65,12 @@ public class FridgeRestClient {
     }
 
     public static void insertIngredientData(Ingredient ingredient){
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
         RequestParams params = new RequestParams();
         params.add("name", ingredient.getName());
-        params.add("boughtDate", ingredient.getBoughtDate());
-        params.add("expiryDate", ingredient.getExpiryDate());
+        params.add("boughtDate", dateFormat.format(ingredient.getBoughtDate()));
+        params.add("expiryDate", dateFormat.format(ingredient.getExpiryDate()));
         params.add("amountUnit", ingredient.getUnit());
         params.add("amount", ingredient.getAmountString());
         params.add("type", "insert");
