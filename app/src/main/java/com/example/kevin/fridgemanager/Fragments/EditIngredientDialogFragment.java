@@ -1,3 +1,6 @@
+/*
+Created by Kevin Kwon on August 13 2018
+ */
 package com.example.kevin.fridgemanager.Fragments;
 
 import android.os.Bundle;
@@ -15,6 +18,7 @@ import com.example.kevin.fridgemanager.Activities.FridgeActivity;
 import com.example.kevin.fridgemanager.DomainModels.Ingredient;
 import com.example.kevin.fridgemanager.R;
 import com.example.kevin.fridgemanager.REST.FridgeRestClient;
+
 
 public class EditIngredientDialogFragment extends DialogFragment {
     private static final String TAG = "EditIngredientDialogFra";
@@ -34,6 +38,7 @@ public class EditIngredientDialogFragment extends DialogFragment {
     private TextView mTextInputType;
     private EditText mEditAmountText;
     private Button mUpdateButton;
+    private FridgeActivity mActivity;
 
 
     // TODO: Make a factory to create an insert or remove dialog
@@ -41,11 +46,8 @@ public class EditIngredientDialogFragment extends DialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Bundle args = getArguments();
-        assert args != null;
         String type = args.getString("updateType");
-        assert type != null;
         final Ingredient ingredient = (Ingredient) args.getSerializable("ingredient");
-        assert ingredient != null;
 
         View view = inflater.inflate(R.layout.dialog_edit_ingredient, container, false);
         mTextInputType = view.findViewById(R.id.insert_or_update_text);
@@ -61,15 +63,22 @@ public class EditIngredientDialogFragment extends DialogFragment {
         }
 
         mTextInputType.setText(displayMessage);
-
+        mActivity = (FridgeActivity) getActivity();
 
         switch(type){
             case "insert":
                 mUpdateButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        ((FridgeActivity)getActivity()).tryUpdateItemAmount(ingredient.getName(), String.valueOf(mEditAmountText.getText()));
+                        String amountText = mEditAmountText.getText().toString();
+                        if(amountText.isEmpty()){
+                            getDialog().dismiss();
+                            return;
+                        }
+                        mActivity.tryUpdateItemAmount(ingredient.getName(), amountText);
                         getDialog().dismiss();
+                        int amount = Integer.parseInt(amountText);
+                        FridgeRestClient.insertIngredientData(new Ingredient(ingredient.getName(), amount, ingredient.getUnit()));
                     }
                 });
                 break;
@@ -77,7 +86,16 @@ public class EditIngredientDialogFragment extends DialogFragment {
                 mUpdateButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
+                        String amountText = mEditAmountText.getText().toString();
+                        if(amountText.isEmpty()){
+                            getDialog().dismiss();
+                            return;
+                        }
+                        int realAmount = Integer.parseInt(amountText);
+                        int negativeAmount =  realAmount * -1;
+                        mActivity.tryUpdateItemAmount(ingredient.getName(), String.valueOf(negativeAmount));
+                        getDialog().dismiss();
+                        FridgeRestClient.removeIngredientAmount(ingredient.getName(), realAmount);
                     }
                 });
                 break;
@@ -87,4 +105,6 @@ public class EditIngredientDialogFragment extends DialogFragment {
 
         return view;
     }
+
+
 }

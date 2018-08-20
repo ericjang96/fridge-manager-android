@@ -1,6 +1,10 @@
+/*
+Created by Kevin Kwon on August 02 2018
+ */
 package com.example.kevin.fridgemanager.DomainModels;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 
 public class Ingredient implements Serializable {
@@ -10,7 +14,19 @@ public class Ingredient implements Serializable {
     private String amountUnit;
     private Integer amount;
 
-    public Ingredient(String name, String amtUnit, Integer amt){
+    // if Date is not specified, say insert = bought date
+    public Ingredient(String name, Integer amt, String amtUnit){
+
+        Date currentDate = new Date();
+        Calendar c = Calendar.getInstance();
+        c.setTime(currentDate);
+
+        // expiry date is 2 weeks later (for now)
+        c.add(Calendar.DATE, 14);
+        Date expiryDate = c.getTime();
+
+        boughtDate = currentDate;
+        this.expiryDate = expiryDate;
         this.name = name;
         amountUnit = amtUnit;
         amount = amt;

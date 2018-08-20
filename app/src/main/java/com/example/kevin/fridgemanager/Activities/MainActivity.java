@@ -22,4 +22,9 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, FridgeActivity.class);
         startActivity(intent);
     }
+
+    public void goToGroceries(View view){
+        Intent intent = new Intent(this, GroceryActivity.class);
+        startActivity(intent);
+    }
 }

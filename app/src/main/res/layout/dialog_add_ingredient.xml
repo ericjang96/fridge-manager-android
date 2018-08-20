@@ -73,32 +73,30 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:inputType="textPersonName"
+            android:inputType="number"
             android:text="1000" />
 
     </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingEnd="75dp"
-        android:paddingStart="75dp">
+        android:gravity="center"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/cancel_add_ingredient_prompt_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
+            android:layout_marginEnd="20dp"
             android:text="Cancel" />
 
         <Button
             android:id="@+id/send_ingredient_request_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="false"
+            android:layout_marginStart="20dp"
             android:text="add" />
-    </RelativeLayout>
+    </LinearLayout>
 
 </LinearLayout>

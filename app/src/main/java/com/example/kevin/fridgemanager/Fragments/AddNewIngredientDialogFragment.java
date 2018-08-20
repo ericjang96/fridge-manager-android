@@ -1,3 +1,6 @@
+/*
+Created by Kevin Kwon on August 13 2018
+ */
 package com.example.kevin.fridgemanager.Fragments;
 
 
@@ -54,17 +57,9 @@ public class AddNewIngredientDialogFragment extends DialogFragment {
                     String amountUnit = mEditUnit.getText().toString();
                     String amount = mEditAmount.getText().toString();
 
-                    Date currentDate = new Date();
-                    Calendar c = Calendar.getInstance();
-                    c.setTime(currentDate);
-
-                    // expiry date is 2 weeks later (for now)
-                    c.add(Calendar.DATE, 14);
-                    Date expiryDate = c.getTime();
-
                     Integer amountInt = Integer.parseInt(amount);
 
-                    Ingredient ingredient = new Ingredient(name, currentDate, expiryDate, amountUnit, amountInt);
+                    Ingredient ingredient = new Ingredient(name, amountInt, amountUnit);
                     FridgeRestClient.insertIngredientData(ingredient);
                     getDialog().dismiss();
 

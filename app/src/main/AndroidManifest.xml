@@ -22,7 +22,13 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".Activities.FridgeActivity"
+        <activity
+            android:name=".Activities.FridgeActivity"
+            android:parentActivityName=".Activities.MainActivity">
+        </activity>
+
+        <activity
+            android:name=".Activities.GroceryActivity"
             android:parentActivityName=".Activities.MainActivity">
         </activity>
     </application>

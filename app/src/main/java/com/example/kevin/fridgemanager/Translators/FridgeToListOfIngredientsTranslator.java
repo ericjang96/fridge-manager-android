@@ -1,3 +1,6 @@
+/*
+Created by Kevin Kwon on August 04 2018
+ */
 package com.example.kevin.fridgemanager.Translators;
 
 import org.json.JSONArray;
@@ -14,22 +17,8 @@ public class FridgeToListOfIngredientsTranslator {
         List<Ingredient> result = new ArrayList<>();
         for(int i = 0 ; i < fridgeResponse.length(); i++){
             JSONObject ing = fridgeResponse.getJSONObject(i);
-            result.add(new Ingredient(ing.getString("_id"), ing.getString("unit"), ing.getInt("amount")));
+            result.add(new Ingredient(ing.getString("_id"), ing.getInt("amount"), ing.getString("unit")));
         }
-//
-//        JSONObject fridge = fridgeResponse.getJSONObject(0);
-//        JSONArray ingredientsArray = fridge.getJSONArray("ingredients");
-//
-//
-//        for(int i = 0; i < ingredientsArray.length(); i++){
-//            JSONObject val = ingredientsArray.getJSONObject(i);
-//            String name = val.getString("name");
-//            Integer amount = val.getInt("amount");
-//            String unit = val.getString("amountUnit");
-//
-//            Ingredient ingredient = new Ingredient(name, unit, amount);
-//            result.add(ingredient);
-//        }
 
         return result;
     }

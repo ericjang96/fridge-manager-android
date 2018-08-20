@@ -1,3 +1,7 @@
+/*
+Created by Kevin Kwon on August 02 2018
+ */
+
 package com.example.kevin.fridgemanager.Adapters;
 
 import android.content.Context;
@@ -20,6 +24,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 import com.example.kevin.fridgemanager.DomainModels.Ingredient;
+import com.example.kevin.fridgemanager.REST.FridgeRestClient;
 
 // Adapter used for the recycler view that displays all ingredients in a fridge
 public class IngredientsViewAdapter extends RecyclerView.Adapter<IngredientsViewAdapter.IngredientViewHolder> {
@@ -32,14 +37,13 @@ public class IngredientsViewAdapter extends RecyclerView.Adapter<IngredientsView
         this.context = context;
     }
 
-
     // Ingredient view holder that references the card view defined to hold one ingredient item
     // class defined within scope of the package
-    protected static class IngredientViewHolder extends RecyclerView.ViewHolder {
+    protected class IngredientViewHolder extends RecyclerView.ViewHolder {
         //widgets
         public CardView mCardView;
         public TextView mIngredientName, mIngredientAmount, mIngredientUnit;
-        public Button mInsertButton, mRemoveButton;
+        public Button mInsertButton, mRemoveButton, mDeleteButton;
         public EditTextListener editTextListener;
 
         IngredientViewHolder(View itemView, EditTextListener editTextListener) {
@@ -52,7 +56,38 @@ public class IngredientsViewAdapter extends RecyclerView.Adapter<IngredientsView
             mIngredientUnit = itemView.findViewById(R.id.ingredient_unit);
             mInsertButton = itemView.findViewById(R.id.add_ingredient_button);
             mRemoveButton = itemView.findViewById(R.id.remove_ingredient_button);
+            mDeleteButton = itemView.findViewById(R.id.delete_ingredient_button);
             mIngredientAmount.addTextChangedListener(editTextListener);
+
+            mInsertButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Ingredient ingredient = new Ingredient(mIngredientName.getText().toString(), Integer.parseInt(mIngredientAmount.getText().toString()), mIngredientUnit.getText().toString());
+                    EditIngredientDialogFragment editDialog = EditIngredientDialogFragment.newInstance("insert", ingredient);
+                    FridgeActivity activity = (FridgeActivity) context;
+                    editDialog.show(activity.getSupportFragmentManager(), "edit dialog");
+                }
+            });
+
+            mRemoveButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Ingredient ingredient = new Ingredient(mIngredientName.getText().toString(), Integer.parseInt(mIngredientAmount.getText().toString()), mIngredientUnit.getText().toString());
+                    EditIngredientDialogFragment editDialog = EditIngredientDialogFragment.newInstance("remove", ingredient);
+                    FridgeActivity activity = (FridgeActivity) context;
+                    editDialog.show(activity.getSupportFragmentManager(), "edit dialog");
+                }
+            });
+
+            mDeleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String name = mIngredientName.getText().toString();
+                    FridgeRestClient.deleteWholeIngredient(name);
+                    FridgeActivity activity = (FridgeActivity) context;
+                    activity.removeWholeIngredient(name);
+                }
+            });
         }
     }
 
@@ -71,11 +106,21 @@ public class IngredientsViewAdapter extends RecyclerView.Adapter<IngredientsView
     @Override
     public void onBindViewHolder(@NonNull IngredientViewHolder holder, int position, @NonNull List<Object> payloads) {
         holder.editTextListener.updatePosition(holder.getAdapterPosition());
+
+        //TODO: right now assuming notifyItemChanged is only called by update Item Number for this adapter
+        // TODO: which might be true, but should change the parameters for more robust handling
         if(!payloads.isEmpty()) {
             String amt = payloads.get(0).toString();
             Integer originalValue = Integer.parseInt(holder.mIngredientAmount.getText().toString());
             Integer additionalValue = Integer.parseInt(amt);
-            holder.mIngredientAmount.setText(String.valueOf(originalValue + additionalValue));
+
+            Integer total = originalValue + additionalValue;
+            if(total >= 0){
+                holder.mIngredientAmount.setText(String.valueOf(originalValue + additionalValue));
+            }
+            else{
+                holder.mIngredientAmount.setText("0");
+            }
         }
         else {
             super.onBindViewHolder(holder, position, payloads);
@@ -100,24 +145,6 @@ public class IngredientsViewAdapter extends RecyclerView.Adapter<IngredientsView
         holder.mIngredientName.setText(name);
         holder.mIngredientAmount.setText(String.valueOf(amount));
         holder.mIngredientUnit.setText(unit);
-
-        holder.mInsertButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                EditIngredientDialogFragment editDialog = EditIngredientDialogFragment.newInstance("insert", currentIngred);
-                FridgeActivity activity = (FridgeActivity) context;
-                editDialog.show(activity.getSupportFragmentManager(), "edit dialog");
-            }
-        });
-
-        holder.mRemoveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                EditIngredientDialogFragment editDialog = EditIngredientDialogFragment.newInstance("remove", currentIngred);
-                FridgeActivity activity = (FridgeActivity) context;
-                editDialog.show(activity.getSupportFragmentManager(), "edit dialog");
-            }
-        });
     }
 
     @Override
@@ -162,5 +189,18 @@ public class IngredientsViewAdapter extends RecyclerView.Adapter<IngredientsView
         public void afterTextChanged(Editable editable) {
             //no op
         }
+    }
+
+
+    public void removeAt(int position){
+        ingredients.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, ingredients.size());
+    }
+
+    public void insertAt(Ingredient ingredient, int position){
+        ingredients.add(position, ingredient);
+        notifyItemInserted(position);
+        notifyItemRangeChanged(position, ingredients.size());
     }
 }

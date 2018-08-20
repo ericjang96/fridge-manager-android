@@ -25,15 +25,14 @@
         android:id="@+id/fridge_groceries_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:layout_marginTop="228dp"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/recipes_ingredients_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.095">
+        app:layout_constraintVertical_bias="1.0">
 
         <Button
             android:id="@+id/go_to_fridge_button"
@@ -52,6 +51,7 @@
             android:layout_marginEnd="44dp"
             android:layout_weight="1"
             android:background="#4143c7"
+            android:onClick="goToGroceries"
             android:text="@string/grocery_button" />
 
     </LinearLayout>

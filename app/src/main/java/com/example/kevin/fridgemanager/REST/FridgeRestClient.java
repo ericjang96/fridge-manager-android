@@ -1,3 +1,6 @@
+/*
+Created by Kevin Kwon on August 03 2018
+ */
 package com.example.kevin.fridgemanager.REST;
 
 import android.support.v7.widget.RecyclerView;
@@ -11,9 +14,8 @@ import com.loopj.android.http.RequestParams;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import com.example.kevin.fridgemanager.DomainModels.Ingredient;
@@ -65,15 +67,65 @@ public class FridgeRestClient {
     }
 
     public static void insertIngredientData(Ingredient ingredient){
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        // use time since epoch
+        long boughtDateMilliseconds = ingredient.getBoughtDate().getTime();
+        long expireDateMilliseconds = ingredient.getExpiryDate().getTime();
 
         RequestParams params = new RequestParams();
         params.add("name", ingredient.getName());
-        params.add("boughtDate", dateFormat.format(ingredient.getBoughtDate()));
-        params.add("expiryDate", dateFormat.format(ingredient.getExpiryDate()));
+        params.add("boughtDate", String.valueOf(boughtDateMilliseconds));
+        params.add("expiryDate", String.valueOf(expireDateMilliseconds));
         params.add("amountUnit", ingredient.getUnit());
         params.add("amount", ingredient.getAmountString());
         params.add("type", "insert");
+
+        put("/fridges/ingredients", params, new JsonHttpResponseHandler(){
+            @Override
+            public void onStart(){
+                System.out.println("Sending PUT request...");
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                System.out.println(responseString);
+            }
+        });
+    }
+
+    public static void removeIngredientAmount(String name, int amount){
+        RequestParams params = new RequestParams();
+        params.add("name", name);
+        params.add("amount", String.valueOf(amount));
+        params.add("type", "removeAmount");
+
+        put("/fridges/ingredients", params, new JsonHttpResponseHandler(){
+            @Override
+            public void onStart(){
+                System.out.println("Sending PUT request...");
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+                try {
+                    System.out.println(response.getString("response"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+                System.out.println("Failed to remove: " + responseString);
+            }
+        });
+    }
+
+    public static void deleteWholeIngredient(String name){
+        RequestParams params = new RequestParams();
+        params.add("name", name);
+        params.add("type", "delete");
 
         put("/fridges/ingredients", params, new JsonHttpResponseHandler(){
             @Override
