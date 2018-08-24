@@ -4,9 +4,13 @@ Created by Kevin Kwon on August 03 2018
 package com.example.kevin.fridgemanager.REST;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 import com.example.kevin.fridgemanager.Adapters.IngredientsViewAdapter;
+import com.example.kevin.fridgemanager.DomainModels.User;
+import com.example.kevin.fridgemanager.Singletons.GlobalVariables;
+import com.example.kevin.fridgemanager.Singletons.SharedPrefs;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -23,26 +27,43 @@ import com.example.kevin.fridgemanager.Translators.FridgeToListOfIngredientsTran
 import cz.msebera.android.httpclient.Header;
 
 public class FridgeRestClient {
-    // Change this every time you restart the AWS server
-//    private static final String BASE_URL = "http://ec2-18-236-130-40.us-west-2.compute.amazonaws.com:3000";
-    private static final String BASE_URL = "http://10.0.2.2:3000";
-    private static AsyncHttpClient client = new AsyncHttpClient();
+    private static final String TAG = "FridgeRestClient";
 
-    private static void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        client.get(getAbsoluteUrl(url), params, responseHandler);
+    private static AsyncHttpClient client = new AsyncHttpClient();
+    private static String BASE_URL = GlobalVariables.connectionURL;
+
+    private static String getAbsoluteUrl(String relativeUrl) {
+        return BASE_URL + relativeUrl;
+    }
+
+    private static void get(String url, AsyncHttpResponseHandler responseHandler) {
+        client.get(getAbsoluteUrl(url), responseHandler);
     }
 
     private static void put(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         client.put(getAbsoluteUrl(url), params, responseHandler);
     }
 
+    private static void post(String url, RequestParams params, AsyncHttpResponseHandler responseHandler){
+        client.post(getAbsoluteUrl(url), params, responseHandler);
+    }
 
-    private static String getAbsoluteUrl(String relativeUrl) {
-        return BASE_URL + relativeUrl;
+    public static void createNewFridge(User user){
+        RequestParams params = new RequestParams();
+        params.add("user_id", user.getUserId());
+        params.add("fridge_id", user.getFridgeId());
+
+        post("/fridges", params, new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.i(TAG, "onSuccess: Successfully created a new Fridge!");
+            }
+        });
     }
 
     public static void getFridgeData(final RecyclerView rv, final View loading){
-        get("/fridges/ingredients/view?fridge_id=dummy_fridge_id", null, new JsonHttpResponseHandler() {
+        String fridge_id = SharedPrefs.read("fridge_id");
+        get("/fridges/ingredients/view?fridge_id="+ fridge_id, new JsonHttpResponseHandler() {
             @Override
             public void onStart(){
                 System.out.println("Getting data...");
@@ -67,6 +88,7 @@ public class FridgeRestClient {
     }
 
     public static void insertIngredientData(Ingredient ingredient){
+        String fridge_id = SharedPrefs.read("fridge_id");
         // use time since epoch
         long boughtDateMilliseconds = ingredient.getBoughtDate().getTime();
         long expireDateMilliseconds = ingredient.getExpiryDate().getTime();
@@ -78,6 +100,7 @@ public class FridgeRestClient {
         params.add("amountUnit", ingredient.getUnit());
         params.add("amount", ingredient.getAmountString());
         params.add("type", "insert");
+        params.add("fridge_id", fridge_id);
 
         put("/fridges/ingredients", params, new JsonHttpResponseHandler(){
             @Override
@@ -86,17 +109,28 @@ public class FridgeRestClient {
             }
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                System.out.println(responseString);
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.i(TAG, "onSuccess: Successfully inserted ingredient");
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                try {
+                    Log.i(TAG, "onFailure: " + errorResponse.getString("response"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
 
     public static void removeIngredientAmount(String name, int amount){
+        String fridge_id = SharedPrefs.read("fridge_id");
         RequestParams params = new RequestParams();
         params.add("name", name);
         params.add("amount", String.valueOf(amount));
         params.add("type", "removeAmount");
+        params.add("fridge_id", fridge_id);
 
         put("/fridges/ingredients", params, new JsonHttpResponseHandler(){
             @Override
@@ -123,9 +157,11 @@ public class FridgeRestClient {
     }
 
     public static void deleteWholeIngredient(String name){
+        String fridge_id = SharedPrefs.read("fridge_id");
         RequestParams params = new RequestParams();
         params.add("name", name);
         params.add("type", "delete");
+        params.add("fridge_id", fridge_id);
 
         put("/fridges/ingredients", params, new JsonHttpResponseHandler(){
             @Override

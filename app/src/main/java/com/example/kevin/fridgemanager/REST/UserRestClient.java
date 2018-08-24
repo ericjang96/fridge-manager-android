@@ -1,13 +1,20 @@
 package com.example.kevin.fridgemanager.REST;
 
-import com.example.kevin.fridgemanager.Activities.LoginActivity;
+import android.content.res.Resources;
+import android.util.Log;
+
+import com.example.kevin.fridgemanager.CallbackInterface.ILoginCallback;
+import com.example.kevin.fridgemanager.CallbackInterface.ISignUpCallback;
 import com.example.kevin.fridgemanager.DomainModels.User;
+import com.example.kevin.fridgemanager.R;
+import com.example.kevin.fridgemanager.Singletons.GlobalVariables;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 
@@ -15,14 +22,8 @@ import cz.msebera.android.httpclient.Header;
 
 public class UserRestClient {
 
-    public interface callbackTest{
-        void callOnSuccess();
-    }
-
     private static final String TAG = "UserRestClient";
-
-//    private static final String BASE_URL = "http://ec2-18-236-130-40.us-west-2.compute.amazonaws.com:3000";
-    private static final String BASE_URL = "http://10.0.2.2:3000";
+    private static String BASE_URL = GlobalVariables.connectionURL;
     private static AsyncHttpClient client = new AsyncHttpClient();
 
     private static void post(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
@@ -37,15 +38,28 @@ public class UserRestClient {
         return BASE_URL + relativeUrl;
     }
 
-    public static void getUserExists(String username, String password, final callbackTest loginActivity){
+    public static void getUserExists(String username, String password, final ILoginCallback loginActivity){
         String urlWithQuery = "/users?user_id=" + username + "&password=" + password;
 
         get(urlWithQuery, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                if(response.length() > 0){
-                    System.out.println("Successfully received user!");
-                    loginActivity.callOnSuccess();
+                if(response.length() == 1){
+                    Log.i(TAG, "onSuccess: Successfully received user!");
+                    try {
+                        JSONObject userObject = response.getJSONObject(0);
+                        String username = userObject.getString("user_id");
+                        String fridge_id = userObject.getString("fridge_id");
+                        User user = new User(username, fridge_id);
+
+                        loginActivity.loginSuccess(user);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                else{
+                    Log.i(TAG, "User does not exist");
+                    loginActivity.loginFailure();
                 }
             }
 
@@ -56,7 +70,7 @@ public class UserRestClient {
         });
     }
 
-    public static void postUserData(User user){
+    public static void postUserData(final User user, final ISignUpCallback signUpActivity){
         RequestParams params = new RequestParams();
         params.add("user_id", user.getUserId());
         params.add("password", user.getPassword());
@@ -72,6 +86,7 @@ public class UserRestClient {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 System.out.println("Successfully created new user!");
+                signUpActivity.loginSuccess(user);
             }
 
             @Override
