@@ -8,7 +8,7 @@
 
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/fridge_manager_title_main"
         android:layout_width="325dp"
         android:layout_height="80dp"
         android:layout_centerInParent="true"
@@ -84,6 +84,19 @@
             android:background="#474ae1"
             android:text="@string/ingredient_button" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/logout_main_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="8dp"
+        android:text="Logout"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.866"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recipes_ingredients_layout" />
 
 
 </android.support.constraint.ConstraintLayout>

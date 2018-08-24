@@ -13,7 +13,6 @@
         <activity android:name=".Activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -30,6 +29,16 @@
         <activity
             android:name=".Activities.GroceryActivity"
             android:parentActivityName=".Activities.MainActivity">
+        </activity>
+
+        <activity
+            android:name=".Activities.LoginActivity"
+            android:parentActivityName=".Activities.MainActivity">
+        </activity>
+
+        <activity
+            android:name=".Activities.SignupActivity"
+            android:parentActivityName=".Activities.LoginActivity">
         </activity>
     </application>
 
