@@ -64,7 +64,7 @@ public class AddNewIngredientDialogFragment extends DialogFragment {
                     getDialog().dismiss();
 
                     // If ingredient does not exist
-                    if(!activity.tryUpdateItemAmount(name, amount)){
+                    if(!activity.tryUpdateItemAmount(ingredient, amount)){
                         activity.addIngredient(ingredient);
                     }
                 }

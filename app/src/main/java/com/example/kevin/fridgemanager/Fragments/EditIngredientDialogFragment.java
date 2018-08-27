@@ -19,6 +19,8 @@ import com.example.kevin.fridgemanager.DomainModels.Ingredient;
 import com.example.kevin.fridgemanager.R;
 import com.example.kevin.fridgemanager.REST.FridgeRestClient;
 
+import java.util.List;
+
 
 public class EditIngredientDialogFragment extends DialogFragment {
     private static final String TAG = "EditIngredientDialogFra";
@@ -48,12 +50,15 @@ public class EditIngredientDialogFragment extends DialogFragment {
         Bundle args = getArguments();
         String type = args.getString("updateType");
         final Ingredient ingredient = (Ingredient) args.getSerializable("ingredient");
+        mActivity = (FridgeActivity) getActivity();
+        mActivity.updateCurrentIngredientPosition(ingredient);
 
         View view = inflater.inflate(R.layout.dialog_edit_ingredient, container, false);
         mTextInputType = view.findViewById(R.id.insert_or_update_text);
         mEditAmountText = view.findViewById(R.id.edit_amount_text);
         mUpdateButton = view.findViewById(R.id.edit_ingredient_button);
         String displayMessage;
+
 
         if(ingredient.getUnit().equals("number")){
             displayMessage = "How many would you like to " + type + "?";
@@ -63,7 +68,7 @@ public class EditIngredientDialogFragment extends DialogFragment {
         }
 
         mTextInputType.setText(displayMessage);
-        mActivity = (FridgeActivity) getActivity();
+
 
         switch(type){
             case "insert":
@@ -75,7 +80,7 @@ public class EditIngredientDialogFragment extends DialogFragment {
                             getDialog().dismiss();
                             return;
                         }
-                        mActivity.tryUpdateItemAmount(ingredient.getName(), amountText);
+                        mActivity.tryUpdateItemAmount(ingredient, amountText);
                         getDialog().dismiss();
                         int amount = Integer.parseInt(amountText);
                         FridgeRestClient.insertIngredientData(new Ingredient(ingredient.getName(), amount, ingredient.getUnit()));
@@ -93,7 +98,7 @@ public class EditIngredientDialogFragment extends DialogFragment {
                         }
                         int realAmount = Integer.parseInt(amountText);
                         int negativeAmount =  realAmount * -1;
-                        mActivity.tryUpdateItemAmount(ingredient.getName(), String.valueOf(negativeAmount));
+                        mActivity.tryUpdateItemAmount(ingredient, String.valueOf(negativeAmount));
                         getDialog().dismiss();
                         FridgeRestClient.removeIngredientAmount(ingredient.getName(), realAmount);
                     }
@@ -105,6 +110,4 @@ public class EditIngredientDialogFragment extends DialogFragment {
 
         return view;
     }
-
-
 }

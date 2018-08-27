@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.kevin.fridgemanager.R;
 import com.example.kevin.fridgemanager.Singletons.SharedPrefs;
@@ -16,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
 
     //widgets
     private Button mLogoutButton;
+    private TextView mWelcomeUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +30,9 @@ public class MainActivity extends AppCompatActivity {
         }
         else{
             setContentView(R.layout.activity_main);
+            mWelcomeUser = findViewById(R.id.welcome_user_text);
+            String welcomeText = "Welcome " + SharedPrefs.read("user_id");
+            mWelcomeUser.setText(welcomeText);
             mLogoutButton = findViewById(R.id.logout_main_button);
             mLogoutButton.setOnClickListener(new View.OnClickListener() {
                 @Override

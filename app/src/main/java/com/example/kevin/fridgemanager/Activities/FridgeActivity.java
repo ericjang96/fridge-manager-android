@@ -5,26 +5,34 @@ package com.example.kevin.fridgemanager.Activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.example.kevin.fridgemanager.Adapters.IngredientsViewAdapter;
+import com.example.kevin.fridgemanager.CallbackInterface.IKeyboardChange;
 import com.example.kevin.fridgemanager.DomainModels.Ingredient;
 import com.example.kevin.fridgemanager.Fragments.AddNewIngredientDialogFragment;
+import com.example.kevin.fridgemanager.Managers.KeyboardManager;
+import com.example.kevin.fridgemanager.Managers.NpaLinearLayoutManager;
 import com.example.kevin.fridgemanager.R;
-import com.example.kevin.fridgemanager.REST.FridgeRestClient;
+import com.example.kevin.fridgemanager.Tasks.Fridge.GetIngredientsTask;
 
 import java.util.List;
 
 // TODO: Make a sharedPreferences file that is always up-to-date for offline mode. Once we have internet connection, push/pull to server
 
-public class FridgeActivity extends AppCompatActivity {
+public class FridgeActivity extends AppCompatActivity implements IKeyboardChange{
     private static final String TAG = "FridgeActivity";
 
     //widgets
     private RecyclerView mRecyclerView;
-    private LinearLayoutManager mLayoutManager;
+    private NpaLinearLayoutManager mLayoutManager;
+    private View mLoadingView;
+
+    //vars
+    private IngredientsViewAdapter ingredientsAdapter;
+    private List<Ingredient> ingredients;
+    private int currentIngredientPosition;
 
     // Overridden on create method that initializes the required components in our Fridge Activity
     @Override
@@ -35,28 +43,33 @@ public class FridgeActivity extends AppCompatActivity {
         // Grabbing the recycler view and setting it as a linear layout
         // making the page look like a normal scrollable list
         mRecyclerView = findViewById(R.id.recycler_view_ingredients);
-        mLayoutManager = new LinearLayoutManager(mRecyclerView.getContext());
+        mLayoutManager = new NpaLinearLayoutManager(mRecyclerView.getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
+        mLoadingView = findViewById(R.id.fridgeLoadingPanel);
 
-        View loading = findViewById(R.id.fridgeLoadingPanel);
+        KeyboardManager keyboardManager = new KeyboardManager(FridgeActivity.this);
+        keyboardManager.setUpKeyboardChanges(findViewById(R.id.fridge_activity_layout), FridgeActivity.this);
 
         // Get fridge data
         // TODO: We should ping the server to see if we have a connection, and only make this call if we do. Otherwise, we should fall back to offline storage
-        FridgeRestClient.getFridgeData(mRecyclerView, loading);
-        //TODO: Add an observer/listener so that after data is retrieved we can have global variables of adapter/list of ingredients
-        // TODO: because right now we're constantly retrieving adapter and ingredients every time we call
+        // TODO: Probably should use SQLite for offline storage.
+        new GetIngredientsTask(FridgeActivity.this).execute();
+    }
+
+
+    public void updateIngredients(IngredientsViewAdapter adapter, List<Ingredient> ingredients) {
+        this.ingredientsAdapter = adapter;
+        this.ingredients = ingredients;
     }
 
     // Refresh the list of ingredients shown in our fridge by sending a new GET request
     public void refresh(View view) {
-        RecyclerView rv = findViewById(R.id.recycler_view_ingredients);
-        View loading = findViewById(R.id.fridgeLoadingPanel);
-        rv.setVisibility(View.GONE);
-        loading.setVisibility(View.VISIBLE);
-        FridgeRestClient.getFridgeData(rv, loading);
+        mRecyclerView.setVisibility(View.GONE);
+        mLoadingView.setVisibility(View.VISIBLE);
+        new GetIngredientsTask(FridgeActivity.this).execute();
     }
 
-    //
+
     public void showAddIngredientPrompt(View view){
         AddNewIngredientDialogFragment dialog = new AddNewIngredientDialogFragment();
         dialog.show(getSupportFragmentManager(), "Add Ingredient Dialog");
@@ -64,51 +77,34 @@ public class FridgeActivity extends AppCompatActivity {
 
     // Obtain the recycler view, and the adapter. Get the ingredients and
     // try to find position of ingredients. If found, update the amount. If not, return false
-    public boolean tryUpdateItemAmount(String name, String amount){
-        IngredientsViewAdapter adapter = (IngredientsViewAdapter) mRecyclerView.getAdapter();
-        assert adapter != null;
-        List<Ingredient> ingredients = adapter.getIngredients();
-        int position = findPositionByName(ingredients, name);
-
+    public boolean tryUpdateItemAmount(Ingredient ingredient, String amount){
+        int position = findPositionByName(ingredients, ingredient.getName());
         // Not found
         if(position == -1){
             return false;
         }
 
-        adapter.notifyItemChanged(position, amount);
+        ingredientsAdapter.notifyItemChanged(position, amount);
         return true;
     }
 
     public void addIngredient(Ingredient ingredient){
-        IngredientsViewAdapter adapter = (IngredientsViewAdapter) mRecyclerView.getAdapter();
-        assert adapter != null;
-        List<Ingredient> ingredients = adapter.getIngredients();
-        int position = positionToInsert(ingredients,ingredient);
-        adapter.insertAt(ingredient, position);
-        adapter.notifyItemInserted(position);
-        mLayoutManager.scrollToPosition(position);
-    }
-
-    // finds position of ingredient in the list. If not found, return -1
-    public int findPositionByName(List<Ingredient> list, String name){
-        for(int i = 0; i < list.size(); i++){
-            if(list.get(i).getName().equals(name))
-                return i;
-        }
-        return -1;
+        int position = positionToInsert(ingredients, ingredient);
+        ingredientsAdapter.insertAt(ingredient, position);
+        ingredientsAdapter.notifyItemInserted(position);
+        mRecyclerView.smoothScrollToPosition(position);
     }
 
     // Calls the adapter to remove ingredient at position i
     public void removeWholeIngredient(String name){
-        IngredientsViewAdapter adapter = (IngredientsViewAdapter) mRecyclerView.getAdapter();
-        assert adapter != null;
-        List<Ingredient> ingredients = adapter.getIngredients();
         int position = findPositionByName(ingredients, name);
-        adapter.removeAt(position);
+        ingredientsAdapter.removeAt(position);
     }
 
 
     public int positionToInsert(List<Ingredient> list, Ingredient ing){
+        if(list.size() == 0)
+            return 0;
         String name = ing.getName();
         int comparison = name.compareTo(list.get(0).getName());
         if(comparison < 1){
@@ -126,5 +122,35 @@ public class FridgeActivity extends AppCompatActivity {
 
         // If you can't find it, return the size of list
         return list.size();
+    }
+
+
+    // finds position of ingredient in the list. If not found, return -1
+    private int findPositionByName(List<Ingredient> list, String name){
+        for(int i = 0; i < list.size(); i++){
+            if(list.get(i).getName().equals(name))
+                return i;
+        }
+        return -1;
+    }
+
+
+    public void updateCurrentIngredientPosition(Ingredient ingredient){
+        currentIngredientPosition = findPositionByName(ingredients, ingredient.getName());
+    }
+
+    @Override
+    public void doWhenKeyboardOpens() {
+        mRecyclerView.smoothScrollToPosition(currentIngredientPosition);
+    }
+
+    @Override
+    public void doWhenKeyboardCloses() {
+        //do Nothing
+    }
+
+    @Override
+    public void onBackPressed() {
+        //do nothing
     }
 }

@@ -13,6 +13,7 @@ public class Ingredient implements Serializable {
     private Date expiryDate;
     private String amountUnit;
     private Integer amount;
+    private Integer position;
 
     // if Date is not specified, say insert = bought date
     public Ingredient(String name, Integer amt, String amtUnit){
@@ -64,6 +65,9 @@ public class Ingredient implements Serializable {
         return amount.toString();
     }
 
+    public int getPosition(){
+        return position;
+    }
 
     public void setName(String newName){
         this.name = newName;
@@ -75,5 +79,9 @@ public class Ingredient implements Serializable {
 
     public void setAmountUnit(String newUnit){
         this.amountUnit = newUnit;
+    }
+
+    public void setPosition(int position){
+        this.position = position;
     }
 }

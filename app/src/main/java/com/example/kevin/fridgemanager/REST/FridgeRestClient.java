@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.example.kevin.fridgemanager.Adapters.IngredientsViewAdapter;
+import com.example.kevin.fridgemanager.CallbackInterface.IFridgeUpdateIngredients;
 import com.example.kevin.fridgemanager.DomainModels.User;
 import com.example.kevin.fridgemanager.Singletons.GlobalVariables;
 import com.example.kevin.fridgemanager.Singletons.SharedPrefs;
@@ -61,7 +62,7 @@ public class FridgeRestClient {
         });
     }
 
-    public static void getFridgeData(final RecyclerView rv, final View loading){
+    public static void getFridgeData(final RecyclerView rv, final View loading, final IFridgeUpdateIngredients callback){
         String fridge_id = SharedPrefs.read("fridge_id");
         get("/fridges/ingredients/view?fridge_id="+ fridge_id, new JsonHttpResponseHandler() {
             @Override
@@ -83,6 +84,7 @@ public class FridgeRestClient {
                 rv.setAdapter(adapter);
                 rv.setVisibility(View.VISIBLE);
                 loading.setVisibility(View.INVISIBLE);
+                callback.updateIngredients();
             }
         });
     }

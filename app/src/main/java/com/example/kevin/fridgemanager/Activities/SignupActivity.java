@@ -1,21 +1,32 @@
 package com.example.kevin.fridgemanager.Activities;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.example.kevin.fridgemanager.CallbackInterface.ISignUpCallback;
 import com.example.kevin.fridgemanager.DomainModels.User;
+import com.example.kevin.fridgemanager.Generators.AlertDialogGenerator;
 import com.example.kevin.fridgemanager.Generators.FridgeIdGenerator;
+import com.example.kevin.fridgemanager.Managers.KeyboardManager;
 import com.example.kevin.fridgemanager.R;
 import com.example.kevin.fridgemanager.REST.FridgeRestClient;
 import com.example.kevin.fridgemanager.REST.UserRestClient;
 import com.example.kevin.fridgemanager.Singletons.SharedPrefs;
+import com.example.kevin.fridgemanager.Tasks.User.GetListOfUsersTask;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SignupActivity extends AppCompatActivity implements ISignUpCallback{
     private static final String TAG = "SignupActivity";
@@ -24,11 +35,25 @@ public class SignupActivity extends AppCompatActivity implements ISignUpCallback
     private Button mDoneButton;
     private View mLoading;
 
+    //vars
+    private AlertDialogGenerator dialogGenerator;
+    private List<String> usernames = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup_user);
+        initializeWidgets();
 
+        new GetListOfUsersTask(SignupActivity.this).execute();
+
+        KeyboardManager keyboardManager = new KeyboardManager(SignupActivity.this);
+        keyboardManager.setupParent(findViewById(R.id.signup_user_layout));
+
+        dialogGenerator = new AlertDialogGenerator();
+    }
+
+    private void initializeWidgets(){
         mUserIdEditText = findViewById(R.id.username_signup_input);
         mPasswordEditText = findViewById(R.id.password_signup_input);
         mConfirmPasswordEditText = findViewById(R.id.confirm_password_signup_input);
@@ -42,45 +67,53 @@ public class SignupActivity extends AppCompatActivity implements ISignUpCallback
             @Override
             public void onClick(View view) {
                 mLoading.setVisibility(View.VISIBLE);
-                if(checkPasswordMatch()){
-                    String userId = mUserIdEditText.getText().toString();
-                    String password = mPasswordEditText.getText().toString();
-                    String fridgeId = FridgeIdGenerator.generateID();
-                    String email = mEmailEditText.getText().toString();
+                String userId = mUserIdEditText.getText().toString();
+                String password = mPasswordEditText.getText().toString();
+                String fridgeId = FridgeIdGenerator.generateID();
+                String email = mEmailEditText.getText().toString();
 
+                if(doesPasswordMatch() && isUsernameAvailable(userId)){
                     User user = new User(userId, password, fridgeId, email);
-
                     UserRestClient.postUserData(user, SignupActivity.this);
-                }
-                else{
-                    mLoading.setVisibility(View.INVISIBLE);
-                    AlertDialog alertDialog = new AlertDialog.Builder(SignupActivity.this).create();
-                    alertDialog.setTitle("Error");
-                    alertDialog.setMessage("Password and Confirm Password do not match");
-                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            });
-                    alertDialog.show();
                 }
             }
         });
     }
 
-    private boolean checkPasswordMatch(){
+    private boolean doesPasswordMatch(){
         String pwd = mPasswordEditText.getText().toString();
         String confirmPwd = mConfirmPasswordEditText.getText().toString();
-        return pwd.equals(confirmPwd);
+
+        if(pwd.equals(confirmPwd)){
+            return true;
+        }
+        else{
+            mLoading.setVisibility(View.INVISIBLE);
+            AlertDialog dialog = dialogGenerator.generate("Error", "The password and confirmation do not match", SignupActivity.this);
+            dialog.show();
+            return false;
+        }
     }
 
+    private boolean isUsernameAvailable(String username){
+        if(usernames.contains(username)){
+            mLoading.setVisibility(View.INVISIBLE);
+            AlertDialog dialog = dialogGenerator.generate("Error", "This username already exists, please choose another", SignupActivity.this);
+            dialog.show();
+            return false;
+        }
 
+        return true;
+    }
+
+    public void setUsernames(List<String> usernames){
+        this.usernames = usernames;
+    }
 
     @Override
     public void loginSuccess(User user) {
         addFridge(user);
-        saveCurrentUser(user.getUserId(), user.getPassword());
+        saveCurrentUser(user.getUserId(), user.getFridgeId());
         SharedPrefs.write("isLoggedIn", true);
         mLoading.setVisibility(View.INVISIBLE);
         goToMainPage();
@@ -97,7 +130,6 @@ public class SignupActivity extends AppCompatActivity implements ISignUpCallback
         SharedPrefs.write("user_id", userId);
         SharedPrefs.write("fridge_id", fridge_id);
     }
-
 
     @Override
     public void addFridge(User user) {

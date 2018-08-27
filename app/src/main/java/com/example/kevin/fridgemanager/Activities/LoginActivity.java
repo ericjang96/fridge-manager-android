@@ -11,6 +11,8 @@ import android.widget.EditText;
 
 import com.example.kevin.fridgemanager.CallbackInterface.ILoginCallback;
 import com.example.kevin.fridgemanager.DomainModels.User;
+import com.example.kevin.fridgemanager.Generators.AlertDialogGenerator;
+import com.example.kevin.fridgemanager.Managers.KeyboardManager;
 import com.example.kevin.fridgemanager.R;
 import com.example.kevin.fridgemanager.REST.UserRestClient;
 import com.example.kevin.fridgemanager.Singletons.SharedPrefs;
@@ -21,11 +23,27 @@ public class LoginActivity extends AppCompatActivity implements ILoginCallback {
     private Button mLoginButton;
     private View mLoading;
 
+    //vars
+    private AlertDialogGenerator dialogGenerator;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        initializeWidgets();
 
+        KeyboardManager keyboardManager = new KeyboardManager(LoginActivity.this);
+        keyboardManager.setupParent(findViewById(R.id.login_activity_layout));
+
+        dialogGenerator = new AlertDialogGenerator();
+    }
+
+    @Override
+    public void onBackPressed() {
+        //do nothing
+    }
+
+    private void initializeWidgets(){
         mUsername = findViewById(R.id.username_input);
         mPassword = findViewById(R.id.password_input);
         mLoginButton = findViewById(R.id.login_button);
@@ -43,7 +61,6 @@ public class LoginActivity extends AppCompatActivity implements ILoginCallback {
             }
         });
     }
-
 
     public void goToSignupPage(View view){
         Intent intent = new Intent(this, SignupActivity.class);
@@ -73,15 +90,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginCallback {
     @Override
     public void loginFailure(){
         mLoading.setVisibility(View.INVISIBLE);
-        AlertDialog alertDialog = new AlertDialog.Builder(LoginActivity.this).create();
-        alertDialog.setTitle("Error");
-        alertDialog.setMessage("The username or password is wrong");
-        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-        alertDialog.show();
+        AlertDialog dialog = dialogGenerator.generate("Error", "The username or password is wrong", LoginActivity.this);
+        dialog.show();
     }
 }
