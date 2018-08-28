@@ -23,32 +23,27 @@
 
         <activity
             android:name=".Activities.FridgeActivity"
-            android:launchMode = "singleInstance"
             android:parentActivityName=".Activities.MainActivity">
         </activity>
 
         <activity
             android:name=".Activities.UserGroceryListsActivity"
-            android:launchMode = "singleInstance"
             android:parentActivityName=".Activities.MainActivity">
         </activity>
 
         <activity
             android:name=".Activities.LoginActivity"
-            android:launchMode = "singleInstance"
             android:parentActivityName=".Activities.MainActivity">
         </activity>
 
         <activity
             android:name=".Activities.SignupActivity"
-            android:launchMode = "singleInstance"
             android:parentActivityName=".Activities.LoginActivity">
         </activity>
 
 
         <activity
             android:name=".Activities.GroceryListActivity"
-            android:launchMode = "singleInstance"
             android:parentActivityName=".Activities.UserGroceryListsActivity">
         </activity>
     </application>

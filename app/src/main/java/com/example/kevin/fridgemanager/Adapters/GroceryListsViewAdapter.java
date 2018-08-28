@@ -46,8 +46,10 @@ public class GroceryListsViewAdapter extends RecyclerView.Adapter<GroceryListsVi
             mCardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    view.setClickable(false);
                     Intent intent = new Intent(context, GroceryListActivity.class);
                     context.startActivity(intent);
+                    view.setClickable(true);
                 }
             });
 
