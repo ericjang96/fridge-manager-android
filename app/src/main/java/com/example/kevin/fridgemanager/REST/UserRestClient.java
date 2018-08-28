@@ -2,10 +2,12 @@ package com.example.kevin.fridgemanager.REST;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.provider.Settings;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
+import com.example.kevin.fridgemanager.Activities.UserGroceryListsActivity;
 import com.example.kevin.fridgemanager.Adapters.GroceryListsViewAdapter;
 import com.example.kevin.fridgemanager.Adapters.IngredientsViewAdapter;
 import com.example.kevin.fridgemanager.CallbackInterface.IFridgeUpdateIngredients;
@@ -45,6 +47,10 @@ public class UserRestClient {
         client.get(getAbsoluteUrl(url), responseHandler);
     }
 
+    private static void put(String url, RequestParams params, AsyncHttpResponseHandler responseHandler){
+        client.put(getAbsoluteUrl(url), params, responseHandler);
+    }
+
     private static String getAbsoluteUrl(String relativeUrl) {
         return BASE_URL + relativeUrl;
     }
@@ -81,7 +87,7 @@ public class UserRestClient {
         });
     }
 
-    public static void getUsersGroceryLists(final RecyclerView rv, final Context context){
+    public static void getUsersGroceryLists(final RecyclerView rv, final UserGroceryListsActivity activity){
         String urlWithQuery = "/users?user_id=" + SharedPrefs.read(GlobalVariables.user_id);
 
         get(urlWithQuery, new JsonHttpResponseHandler(){
@@ -92,11 +98,42 @@ public class UserRestClient {
                     List<GroceryList> groceryLists = UserToGroceryListsTranslator.translate(user);
                     GroceryListsViewAdapter adapter = new GroceryListsViewAdapter(groceryLists, rv.getContext());
                     rv.setAdapter(adapter);
+                    rv.setVisibility(View.VISIBLE);
+                    activity.updateLists(adapter, groceryLists);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
+            }
+        });
+    }
+
+    public static void insertNewGroceryList(GroceryList list){
+        RequestParams params = new RequestParams();
+        params.add("name", list.getName());
+        params.add("grocery_list_id", list.getGroceryListId());
+        params.add("user_id", SharedPrefs.read(GlobalVariables.user_id));
+        params.add("type", "insert");
+
+        put("/users/groceryLists", params, new JsonHttpResponseHandler(){
+            @Override
+            public void onStart(){
+                System.out.println("Sending PUT request...");
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.i(TAG, "onSuccess: Successfully inserted grocery list");
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                try {
+                    Log.i(TAG, "onFailure: " + errorResponse.getString("response"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }

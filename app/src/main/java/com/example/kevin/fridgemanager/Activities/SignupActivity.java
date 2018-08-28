@@ -11,7 +11,7 @@ import android.widget.EditText;
 import com.example.kevin.fridgemanager.CallbackInterface.ISignUpCallback;
 import com.example.kevin.fridgemanager.DomainModels.User;
 import com.example.kevin.fridgemanager.Generators.AlertDialogGenerator;
-import com.example.kevin.fridgemanager.Generators.FridgeIdGenerator;
+import com.example.kevin.fridgemanager.Generators.UniqueIdGenerator;
 import com.example.kevin.fridgemanager.Managers.KeyboardManager;
 import com.example.kevin.fridgemanager.R;
 import com.example.kevin.fridgemanager.REST.FridgeRestClient;
@@ -63,7 +63,7 @@ public class SignupActivity extends AppCompatActivity implements ISignUpCallback
                 mLoading.setVisibility(View.VISIBLE);
                 String userId = mUserIdEditText.getText().toString();
                 String password = mPasswordEditText.getText().toString();
-                String fridgeId = FridgeIdGenerator.generateID();
+                String fridgeId = UniqueIdGenerator.generateID();
                 String email = mEmailEditText.getText().toString();
 
                 if(doesPasswordMatch() && isUsernameAvailable(userId)){

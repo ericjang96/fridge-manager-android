@@ -12,7 +12,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.kevin.fridgemanager.Activities.GroceryListActivity;
-import com.example.kevin.fridgemanager.Activities.SignupActivity;
 import com.example.kevin.fridgemanager.DomainModels.GroceryList;
 import com.example.kevin.fridgemanager.R;
 
@@ -72,4 +71,9 @@ public class GroceryListsViewAdapter extends RecyclerView.Adapter<GroceryListsVi
         return groceryLists.size();
     }
 
+    public void insertAt(GroceryList list, int position){
+        groceryLists.add(position, list);
+        notifyItemInserted(position);
+        notifyItemRangeChanged(position, groceryLists.size());
+    }
 }

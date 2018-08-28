@@ -59,6 +59,7 @@ public class IngredientsViewAdapter extends RecyclerView.Adapter<IngredientsView
             mDeleteButton = ingredientCardItemView.findViewById(R.id.delete_ingredient_button);
             mIngredientAmount.addTextChangedListener(editTextListener);
 
+            // When clicking the + button, opens up a new EditIngredientDialogFragment
             mInsertButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -69,6 +70,7 @@ public class IngredientsViewAdapter extends RecyclerView.Adapter<IngredientsView
                 }
             });
 
+            // When clicking the - button, opens up a new EditIngredientDialogFragment
             mRemoveButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -79,6 +81,7 @@ public class IngredientsViewAdapter extends RecyclerView.Adapter<IngredientsView
                 }
             });
 
+            // Delete button removes whole ingredient
             mDeleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

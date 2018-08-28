@@ -28,6 +28,7 @@ public class AddNewIngredientDialogFragment extends DialogFragment {
 
     //widgets
     private EditText mEditIngredientName, mEditUnit, mEditAmount;
+    private Button mSendRequestButton, mCancelButton;
 
     @Nullable
     @Override
@@ -37,8 +38,8 @@ public class AddNewIngredientDialogFragment extends DialogFragment {
         mEditUnit = view.findViewById(R.id.edit_ingredient_amountUnit);
         mEditAmount = view.findViewById(R.id.edit_ingredient_amount);
 
-        Button mSendRequestButton = view.findViewById(R.id.send_ingredient_request_button);
-        Button mCancelButton = view.findViewById(R.id.cancel_add_ingredient_prompt_button);
+        mSendRequestButton = view.findViewById(R.id.send_ingredient_request_button);
+        mCancelButton = view.findViewById(R.id.cancel_add_ingredient_prompt_button);
 
         mCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
