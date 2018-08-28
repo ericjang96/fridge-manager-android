@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/ingredient_card_view"
-    android:orientation="vertical"
+    android:id="@+id/cardview_ingredient"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -26,6 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_toEndOf="@+id/ingredient_photo"
             android:maxLines="2"
+            android:text="Ingredient"
             android:textSize="26sp" />
 
         <Button
@@ -59,14 +60,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
-                android:text="1000"
+                android:text="quantity"
                 android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/ingredient_unit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="grams"
+                android:text="unit"
                 android:textSize="18sp" />
 
             <TextView
@@ -77,6 +78,7 @@
 
             <Button
                 android:id="@+id/delete_ingredient_button"
+                style="@android:style/Widget.Material.Button.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="delete" />
@@ -84,7 +86,6 @@
 
 
     </RelativeLayout>
-
 
 
 </android.support.v7.widget.CardView>

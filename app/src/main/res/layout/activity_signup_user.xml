@@ -48,9 +48,9 @@
             android:id="@+id/username_signup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="55dp"
+            android:layout_marginEnd="70dp"
             android:text="Username:"
-            android:textSize="24sp"
+            android:textSize="18sp"
             tools:layout_editor_absoluteX="33dp"
             tools:layout_editor_absoluteY="233dp" />
 
@@ -81,9 +81,9 @@
             android:id="@+id/password_signup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="55dp"
+            android:layout_marginEnd="70dp"
             android:text="Password:"
-            android:textSize="24sp"
+            android:textSize="18sp"
             tools:layout_editor_absoluteX="33dp"
             tools:layout_editor_absoluteY="233dp" />
 
@@ -114,9 +114,9 @@
             android:id="@+id/confirm_password_signup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="22dp"
+            android:layout_marginEnd="37dp"
             android:text="Confirm Password:"
-            android:textSize="24sp"
+            android:textSize="18sp"
             tools:layout_editor_absoluteX="33dp"
             tools:layout_editor_absoluteY="233dp" />
 
@@ -147,9 +147,9 @@
             android:id="@+id/email_signup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="75dp"
+            android:layout_marginEnd="90dp"
             android:text="Email:"
-            android:textSize="24sp"
+            android:textSize="18sp"
             tools:layout_editor_absoluteX="33dp"
             tools:layout_editor_absoluteY="233dp" />
 

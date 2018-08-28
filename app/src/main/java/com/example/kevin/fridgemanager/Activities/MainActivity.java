@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.kevin.fridgemanager.R;
+import com.example.kevin.fridgemanager.Singletons.GlobalVariables;
 import com.example.kevin.fridgemanager.Singletons.SharedPrefs;
 
 public class MainActivity extends AppCompatActivity {
@@ -18,10 +19,12 @@ public class MainActivity extends AppCompatActivity {
     //widgets
     private Button mLogoutButton;
     private TextView mWelcomeUser;
+    private Intent mPreviousIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mPreviousIntent = getIntent();
         SharedPrefs.init(MainActivity.this);
         boolean isLoggedIn = SharedPrefs.read("isLoggedIn", false);
 
@@ -50,12 +53,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void goToGroceries(View view){
-        Intent intent = new Intent(this, GroceryActivity.class);
+        Intent intent = new Intent(this, UserGroceryListsActivity.class);
         startActivity(intent);
     }
 
     public void goToLoginPage(){
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onBackPressed() {
+        String previousActivity = mPreviousIntent.getStringExtra(GlobalVariables.loginActivity);
+        if(previousActivity == null){
+            //do nothing
+        }
+        else if(previousActivity.equals(GlobalVariables.loginActivity)){
+            //do nothing
+        }
+        else{
+            super.onBackPressed();
+        }
     }
 }

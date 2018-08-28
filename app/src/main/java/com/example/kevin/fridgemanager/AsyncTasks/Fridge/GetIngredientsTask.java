@@ -1,4 +1,4 @@
-package com.example.kevin.fridgemanager.Tasks.Fridge;
+package com.example.kevin.fridgemanager.AsyncTasks.Fridge;
 
 import android.app.Activity;
 import android.os.AsyncTask;
@@ -30,6 +30,7 @@ import cz.msebera.android.httpclient.util.EntityUtils;
 
 
 public class GetIngredientsTask extends AsyncTask<Void, Void, List<Ingredient>> {
+    // Weak Refernce must be used to prevent memory leaks
     private WeakReference<Activity> activity;
 
     public GetIngredientsTask(Activity activity) {
@@ -42,6 +43,7 @@ public class GetIngredientsTask extends AsyncTask<Void, Void, List<Ingredient>> 
 
     }
 
+    //TODO: Might want to look into using Volley or RetroFit instead of making http calls directly inside asynctask
     @Override
     protected List<Ingredient> doInBackground(Void... voids) {
         String fridge_id = SharedPrefs.read("fridge_id");

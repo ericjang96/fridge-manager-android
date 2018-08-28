@@ -5,6 +5,7 @@ package com.example.kevin.fridgemanager.Activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -12,10 +13,11 @@ import com.example.kevin.fridgemanager.Adapters.IngredientsViewAdapter;
 import com.example.kevin.fridgemanager.CallbackInterface.IKeyboardChange;
 import com.example.kevin.fridgemanager.DomainModels.Ingredient;
 import com.example.kevin.fridgemanager.Fragments.AddNewIngredientDialogFragment;
+import com.example.kevin.fridgemanager.Generators.AlertDialogGenerator;
 import com.example.kevin.fridgemanager.Managers.KeyboardManager;
 import com.example.kevin.fridgemanager.Managers.NpaLinearLayoutManager;
 import com.example.kevin.fridgemanager.R;
-import com.example.kevin.fridgemanager.Tasks.Fridge.GetIngredientsTask;
+import com.example.kevin.fridgemanager.AsyncTasks.Fridge.GetIngredientsTask;
 
 import java.util.List;
 
@@ -33,6 +35,8 @@ public class FridgeActivity extends AppCompatActivity implements IKeyboardChange
     private IngredientsViewAdapter ingredientsAdapter;
     private List<Ingredient> ingredients;
     private int currentIngredientPosition;
+    private KeyboardManager keyboardManager;
+    private AlertDialogGenerator dialogGenerator;
 
     // Overridden on create method that initializes the required components in our Fridge Activity
     @Override
@@ -47,13 +51,18 @@ public class FridgeActivity extends AppCompatActivity implements IKeyboardChange
         mRecyclerView.setLayoutManager(mLayoutManager);
         mLoadingView = findViewById(R.id.fridgeLoadingPanel);
 
-        KeyboardManager keyboardManager = new KeyboardManager(FridgeActivity.this);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
+                mLayoutManager.getOrientation());
+        mRecyclerView.addItemDecoration(dividerItemDecoration);
+
+        keyboardManager = new KeyboardManager(FridgeActivity.this);
         keyboardManager.setUpKeyboardChanges(findViewById(R.id.fridge_activity_layout), FridgeActivity.this);
 
         // Get fridge data
         // TODO: We should ping the server to see if we have a connection, and only make this call if we do. Otherwise, we should fall back to offline storage
         // TODO: Probably should use SQLite for offline storage.
         new GetIngredientsTask(FridgeActivity.this).execute();
+
     }
 
 
@@ -147,10 +156,5 @@ public class FridgeActivity extends AppCompatActivity implements IKeyboardChange
     @Override
     public void doWhenKeyboardCloses() {
         //do Nothing
-    }
-
-    @Override
-    public void onBackPressed() {
-        //do nothing
     }
 }

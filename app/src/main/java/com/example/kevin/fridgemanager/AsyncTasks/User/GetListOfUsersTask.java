@@ -1,4 +1,4 @@
-package com.example.kevin.fridgemanager.Tasks.User;
+package com.example.kevin.fridgemanager.AsyncTasks.User;
 
 import android.app.Activity;
 import android.os.AsyncTask;

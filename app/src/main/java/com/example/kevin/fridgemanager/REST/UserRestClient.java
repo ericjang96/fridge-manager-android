@@ -1,13 +1,22 @@
 package com.example.kevin.fridgemanager.REST;
 
+import android.content.Context;
 import android.content.res.Resources;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 
+import com.example.kevin.fridgemanager.Adapters.GroceryListsViewAdapter;
+import com.example.kevin.fridgemanager.Adapters.IngredientsViewAdapter;
+import com.example.kevin.fridgemanager.CallbackInterface.IFridgeUpdateIngredients;
 import com.example.kevin.fridgemanager.CallbackInterface.ILoginCallback;
 import com.example.kevin.fridgemanager.CallbackInterface.ISignUpCallback;
+import com.example.kevin.fridgemanager.DomainModels.GroceryList;
 import com.example.kevin.fridgemanager.DomainModels.User;
 import com.example.kevin.fridgemanager.R;
 import com.example.kevin.fridgemanager.Singletons.GlobalVariables;
+import com.example.kevin.fridgemanager.Singletons.SharedPrefs;
+import com.example.kevin.fridgemanager.Translators.UserToGroceryListsTranslator;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -17,6 +26,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
+import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -66,6 +77,26 @@ public class UserRestClient {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
+            }
+        });
+    }
+
+    public static void getUsersGroceryLists(final RecyclerView rv, final Context context){
+        String urlWithQuery = "/users?user_id=" + SharedPrefs.read(GlobalVariables.user_id);
+
+        get(urlWithQuery, new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                try {
+                    JSONObject user = response.getJSONObject(0);
+                    List<GroceryList> groceryLists = UserToGroceryListsTranslator.translate(user);
+                    GroceryListsViewAdapter adapter = new GroceryListsViewAdapter(groceryLists, rv.getContext());
+                    rv.setAdapter(adapter);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
             }
         });
     }

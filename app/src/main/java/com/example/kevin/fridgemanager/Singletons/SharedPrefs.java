@@ -3,6 +3,8 @@ package com.example.kevin.fridgemanager.Singletons;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.util.HashMap;
+
 public class SharedPrefs {
     private static SharedPreferences mSharedPref;
 

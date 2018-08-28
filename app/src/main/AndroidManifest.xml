@@ -27,7 +27,7 @@
         </activity>
 
         <activity
-            android:name=".Activities.GroceryActivity"
+            android:name=".Activities.UserGroceryListsActivity"
             android:parentActivityName=".Activities.MainActivity">
         </activity>
 
@@ -39,6 +39,12 @@
         <activity
             android:name=".Activities.SignupActivity"
             android:parentActivityName=".Activities.LoginActivity">
+        </activity>
+
+
+        <activity
+            android:name=".Activities.GroceryListActivity"
+            android:parentActivityName=".Activities.UserGroceryListsActivity">
         </activity>
     </application>
 

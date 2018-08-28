@@ -20,7 +20,6 @@ import com.example.kevin.fridgemanager.Activities.FridgeActivity;
 import com.example.kevin.fridgemanager.Fragments.EditIngredientDialogFragment;
 import com.example.kevin.fridgemanager.R;
 
-import java.lang.reflect.Field;
 import java.util.List;
 
 import com.example.kevin.fridgemanager.DomainModels.Ingredient;
@@ -39,24 +38,25 @@ public class IngredientsViewAdapter extends RecyclerView.Adapter<IngredientsView
 
     // Ingredient view holder that references the card view defined to hold one ingredient item
     // class defined within scope of the package
-    protected class IngredientViewHolder extends RecyclerView.ViewHolder {
+    class IngredientViewHolder extends RecyclerView.ViewHolder {
         //widgets
-        public CardView mCardView;
-        public TextView mIngredientName, mIngredientAmount, mIngredientUnit;
-        public Button mInsertButton, mRemoveButton, mDeleteButton;
-        public EditTextListener editTextListener;
+        TextView mIngredientName, mIngredientAmount, mIngredientUnit;
+        Button mInsertButton, mRemoveButton, mDeleteButton;
+        EditTextListener editTextListener;
 
-        IngredientViewHolder(View itemView, EditTextListener editTextListener) {
-            super(itemView);
+        IngredientViewHolder(View ingredientCardItemView, EditTextListener editTextListener) {
+            super(ingredientCardItemView);
 
+            // text listener updates UI when http calls are made to update ingredients
             this.editTextListener = editTextListener;
-            mCardView = itemView.findViewById(R.id.ingredient_card_view);
-            mIngredientName = itemView.findViewById(R.id.ingredient_name);
-            mIngredientAmount = itemView.findViewById(R.id.ingredient_amount);
-            mIngredientUnit = itemView.findViewById(R.id.ingredient_unit);
-            mInsertButton = itemView.findViewById(R.id.add_ingredient_button);
-            mRemoveButton = itemView.findViewById(R.id.remove_ingredient_button);
-            mDeleteButton = itemView.findViewById(R.id.delete_ingredient_button);
+
+            // widgets
+            mIngredientName = ingredientCardItemView.findViewById(R.id.ingredient_name);
+            mIngredientAmount = ingredientCardItemView.findViewById(R.id.ingredient_amount);
+            mIngredientUnit = ingredientCardItemView.findViewById(R.id.ingredient_unit);
+            mInsertButton = ingredientCardItemView.findViewById(R.id.add_ingredient_button);
+            mRemoveButton = ingredientCardItemView.findViewById(R.id.remove_ingredient_button);
+            mDeleteButton = ingredientCardItemView.findViewById(R.id.delete_ingredient_button);
             mIngredientAmount.addTextChangedListener(editTextListener);
 
             mInsertButton.setOnClickListener(new View.OnClickListener() {
@@ -97,7 +97,7 @@ public class IngredientsViewAdapter extends RecyclerView.Adapter<IngredientsView
     @NonNull
     @Override
     public IngredientViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int position) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.ingredient_card_view, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview_ingredient, parent, false);
         return new IngredientViewHolder(v, new EditTextListener());
     }
 

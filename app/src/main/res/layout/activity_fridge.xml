@@ -8,20 +8,38 @@
     tools:context=".Activities.FridgeActivity">
 
     <LinearLayout
-        android:id="@+id/topbar"
-        android:layout_width="wrap_content"
+        android:id="@+id/grocery_top_bar"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:background="@android:color/background_dark"
         android:orientation="horizontal"
         android:padding="4dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/your_fridge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:text="Fridge"
+            android:textColor="@android:color/background_light"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/empty_text_fridge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
 
         <Button
             android:id="@+id/fridge_refresh"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:onClick="refresh"
             android:text="refresh" />
 
@@ -29,7 +47,6 @@
             android:id="@+id/fridge_add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:onClick="showAddIngredientPrompt"
             android:text="add" />
     </LinearLayout>
@@ -61,7 +78,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/topbar"
+        app:layout_constraintTop_toBottomOf="@+id/grocery_top_bar"
         app:layout_constraintVertical_bias="0.0">
 
     </android.support.v7.widget.RecyclerView>

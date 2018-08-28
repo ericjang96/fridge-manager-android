@@ -1,18 +1,12 @@
 package com.example.kevin.fridgemanager.Activities;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 
 import com.example.kevin.fridgemanager.CallbackInterface.ISignUpCallback;
 import com.example.kevin.fridgemanager.DomainModels.User;
@@ -23,7 +17,7 @@ import com.example.kevin.fridgemanager.R;
 import com.example.kevin.fridgemanager.REST.FridgeRestClient;
 import com.example.kevin.fridgemanager.REST.UserRestClient;
 import com.example.kevin.fridgemanager.Singletons.SharedPrefs;
-import com.example.kevin.fridgemanager.Tasks.User.GetListOfUsersTask;
+import com.example.kevin.fridgemanager.AsyncTasks.User.GetListOfUsersTask;
 
 import java.util.ArrayList;
 import java.util.List;
