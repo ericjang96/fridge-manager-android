@@ -36,7 +36,6 @@ public class FridgeActivity extends AppCompatActivity implements IKeyboardChange
     private List<Ingredient> ingredients;
     private int currentIngredientPosition;
     private KeyboardManager keyboardManager;
-    private AlertDialogGenerator dialogGenerator;
 
     // Overridden on create method that initializes the required components in our Fridge Activity
     @Override

@@ -24,6 +24,7 @@ public class UserGroceryListsActivity extends AppCompatActivity {
     //widgets
     private RecyclerView mRecyclerView;
     private NpaLinearLayoutManager mLayoutManager;
+    private View mLoadingView;
 
     //vars
     private List<GroceryList> groceryLists;
@@ -37,12 +38,13 @@ public class UserGroceryListsActivity extends AppCompatActivity {
         mRecyclerView = findViewById(R.id.grocery_lists_recycler_view);
         mLayoutManager = new NpaLinearLayoutManager(mRecyclerView.getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
+        mLoadingView = findViewById(R.id.user_grocery_lists_refresh_progress_bar);
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
                 mLayoutManager.getOrientation());
         mRecyclerView.addItemDecoration(dividerItemDecoration);
 
-        UserRestClient.getUsersGroceryLists(mRecyclerView, UserGroceryListsActivity.this);
+        UserRestClient.getUsersGroceryLists(mRecyclerView, mLoadingView, UserGroceryListsActivity.this);
     }
 
     public void updateLists(GroceryListsViewAdapter adapter, List<GroceryList> lists){
@@ -57,8 +59,9 @@ public class UserGroceryListsActivity extends AppCompatActivity {
     }
 
     public void refresh(View view) {
+        mLoadingView.setVisibility(View.VISIBLE);
         mRecyclerView.setVisibility(View.GONE);
-        UserRestClient.getUsersGroceryLists(mRecyclerView, UserGroceryListsActivity.this);
+        UserRestClient.getUsersGroceryLists(mRecyclerView, mLoadingView,UserGroceryListsActivity.this);
     }
 
     public void addGroceryList(GroceryList list){
@@ -66,5 +69,19 @@ public class UserGroceryListsActivity extends AppCompatActivity {
         adapter.insertAt(list, position);
         adapter.notifyItemInserted(position);
         mRecyclerView.smoothScrollToPosition(position);
+    }
+
+    public void removeGroceryList(String name){
+        int position = findPositionByName(groceryLists, name);
+        adapter.removeAt(position);
+    }
+
+    // finds position of grocery list in the list. If not found, return -1
+    private int findPositionByName(List<GroceryList> list, String name){
+        for(int i = 0; i < list.size(); i++){
+            if(list.get(i).getName().equals(name))
+                return i;
+        }
+        return -1;
     }
 }

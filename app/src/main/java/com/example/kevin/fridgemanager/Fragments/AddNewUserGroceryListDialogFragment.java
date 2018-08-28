@@ -51,7 +51,7 @@ public class AddNewUserGroceryListDialogFragment extends DialogFragment {
                 GroceryList list = new GroceryList(name, grocery_list_id);
                 UserRestClient.insertNewGroceryList(list);
                 getDialog().dismiss();
-                
+
                 assert activity != null;
                 activity.addGroceryList(list);
             }

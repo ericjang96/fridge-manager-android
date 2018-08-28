@@ -12,8 +12,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.kevin.fridgemanager.Activities.GroceryListActivity;
+import com.example.kevin.fridgemanager.Activities.UserGroceryListsActivity;
 import com.example.kevin.fridgemanager.DomainModels.GroceryList;
 import com.example.kevin.fridgemanager.R;
+import com.example.kevin.fridgemanager.REST.UserRestClient;
 
 import java.util.List;
 
@@ -48,6 +50,16 @@ public class GroceryListsViewAdapter extends RecyclerView.Adapter<GroceryListsVi
                     context.startActivity(intent);
                 }
             });
+
+            mDeleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String name = mGroceryListName.getText().toString();
+                    UserRestClient.deleteGroceryList(name);
+                    UserGroceryListsActivity activity = (UserGroceryListsActivity) context;
+                    activity.removeGroceryList(name);
+                }
+            });
         }
     }
 
@@ -69,6 +81,13 @@ public class GroceryListsViewAdapter extends RecyclerView.Adapter<GroceryListsVi
     @Override
     public int getItemCount() {
         return groceryLists.size();
+    }
+
+
+    public void removeAt(int position){
+        groceryLists.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, groceryLists.size());
     }
 
     public void insertAt(GroceryList list, int position){

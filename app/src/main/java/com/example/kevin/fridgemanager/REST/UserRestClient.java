@@ -1,21 +1,15 @@
 package com.example.kevin.fridgemanager.REST;
 
-import android.content.Context;
-import android.content.res.Resources;
-import android.provider.Settings;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
 import com.example.kevin.fridgemanager.Activities.UserGroceryListsActivity;
 import com.example.kevin.fridgemanager.Adapters.GroceryListsViewAdapter;
-import com.example.kevin.fridgemanager.Adapters.IngredientsViewAdapter;
-import com.example.kevin.fridgemanager.CallbackInterface.IFridgeUpdateIngredients;
 import com.example.kevin.fridgemanager.CallbackInterface.ILoginCallback;
 import com.example.kevin.fridgemanager.CallbackInterface.ISignUpCallback;
 import com.example.kevin.fridgemanager.DomainModels.GroceryList;
 import com.example.kevin.fridgemanager.DomainModels.User;
-import com.example.kevin.fridgemanager.R;
 import com.example.kevin.fridgemanager.Singletons.GlobalVariables;
 import com.example.kevin.fridgemanager.Singletons.SharedPrefs;
 import com.example.kevin.fridgemanager.Translators.UserToGroceryListsTranslator;
@@ -87,7 +81,7 @@ public class UserRestClient {
         });
     }
 
-    public static void getUsersGroceryLists(final RecyclerView rv, final UserGroceryListsActivity activity){
+    public static void getUsersGroceryLists(final RecyclerView rv, final View loading, final UserGroceryListsActivity activity){
         String urlWithQuery = "/users?user_id=" + SharedPrefs.read(GlobalVariables.user_id);
 
         get(urlWithQuery, new JsonHttpResponseHandler(){
@@ -99,6 +93,7 @@ public class UserRestClient {
                     GroceryListsViewAdapter adapter = new GroceryListsViewAdapter(groceryLists, rv.getContext());
                     rv.setAdapter(adapter);
                     rv.setVisibility(View.VISIBLE);
+                    loading.setVisibility(View.INVISIBLE);
                     activity.updateLists(adapter, groceryLists);
 
                 } catch (JSONException e) {
@@ -134,6 +129,25 @@ public class UserRestClient {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+            }
+        });
+    }
+
+    public static void deleteGroceryList(String name){
+        RequestParams params = new RequestParams();
+        params.add("user_id", SharedPrefs.read(GlobalVariables.user_id));
+        params.add("name", name);
+        params.add("type", "delete");
+
+        put("/users/groceryLists", params, new JsonHttpResponseHandler(){
+            @Override
+            public void onStart(){
+                System.out.println("Sending PUT request...");
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                System.out.println(responseString);
             }
         });
     }
