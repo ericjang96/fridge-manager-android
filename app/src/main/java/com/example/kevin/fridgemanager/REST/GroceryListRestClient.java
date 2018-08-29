@@ -21,6 +21,8 @@ import cz.msebera.android.httpclient.Header;
 
 public class GroceryListRestClient extends AbstractRestClient {
 
+    private static String grocery_list_id;
+
     public static void getGroceryListWithId(String grocery_list_id, final RecyclerView rv, final GroceryListActivity activity){
         String urlWithQuery = "/groceryLists?grocery_list_id=" + grocery_list_id;
 
@@ -60,6 +62,7 @@ public class GroceryListRestClient extends AbstractRestClient {
         params.add("name", item.getName());
         params.add("amount", String.valueOf(item.getAmount()));
         params.add("comment", item.getComment());
+        params.add("grocery_list_id", grocery_list_id);
         params.add("type", "insert");
 
         put("/groceryLists", params, new JsonHttpResponseHandler(){
@@ -74,6 +77,7 @@ public class GroceryListRestClient extends AbstractRestClient {
         RequestParams params = new RequestParams();
         params.add("name", name);
         params.add("type", "delete");
+        params.add("grocery_list_id", grocery_list_id);
 
         put("/groceryLists", params, new JsonHttpResponseHandler(){
             @Override
@@ -81,5 +85,9 @@ public class GroceryListRestClient extends AbstractRestClient {
                 System.out.println(responseString);
             }
         });
+    }
+
+    public static void setGroceryListId(String id){
+        grocery_list_id = id;
     }
 }

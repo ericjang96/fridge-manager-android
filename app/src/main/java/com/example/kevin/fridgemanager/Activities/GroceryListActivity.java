@@ -53,6 +53,7 @@ public class GroceryListActivity extends AppCompatActivity{
 
         mRecyclerView.addItemDecoration(dividerItemDecoration);
 
+        GroceryListRestClient.setGroceryListId(grocery_list_id);
         GroceryListRestClient.getGroceryListWithId(grocery_list_id, mRecyclerView, GroceryListActivity.this);
     }
 
@@ -88,17 +89,5 @@ public class GroceryListActivity extends AppCompatActivity{
                 return i;
         }
         return -1;
-    }
-
-    private void init(){
-        List<GroceryItem> items = new ArrayList<>();
-        items.add(new GroceryItem("Apple", 3, "Buy fuji apples"));
-        items.add(new GroceryItem("Toothpaste", 1, "Colgate non whitening"));
-        items.add(new GroceryItem("Bananas", 5, "unripe bananas"));
-        items.add(new GroceryItem("Soy Milk", 1, "get the 2L cartons, brand: So Good"));
-        items.add(new GroceryItem("Dental Floss", 1));
-
-        GroceryItemsViewAdapter adapter = new GroceryItemsViewAdapter(items, mRecyclerView.getContext());
-        mRecyclerView.setAdapter(adapter);
     }
 }

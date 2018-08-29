@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
@@ -15,7 +16,6 @@ import android.widget.TextView;
 
 import com.example.kevin.fridgemanager.Activities.GroceryListActivity;
 import com.example.kevin.fridgemanager.DomainModels.GroceryItem;
-import com.example.kevin.fridgemanager.DomainModels.GroceryList;
 import com.example.kevin.fridgemanager.R;
 import com.example.kevin.fridgemanager.REST.GroceryListRestClient;
 
@@ -28,7 +28,6 @@ public class GroceryItemsViewAdapter extends RecyclerView.Adapter<GroceryItemsVi
     //vars
     private List<GroceryItem> groceryItems;
     private Context context;
-
     public GroceryItemsViewAdapter(List<GroceryItem> items, Context context){
         this.groceryItems = items;
         this.context = context;
@@ -53,7 +52,7 @@ public class GroceryItemsViewAdapter extends RecyclerView.Adapter<GroceryItemsVi
             mDeleteButton = groceryItemView.findViewById(R.id.delete_grocery_item_button);
             mExpandIcon = groceryItemView.findViewById(R.id.grocery_item_expand_icon);
 
-            mExpandableLayout.setInterpolator(new LinearInterpolator());
+            mExpandableLayout.setInterpolator(new AccelerateInterpolator());
             mExpandableLayout.setOnExpansionUpdateListener(this);
 
             mCardView.setOnClickListener(new View.OnClickListener() {
