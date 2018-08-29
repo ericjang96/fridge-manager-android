@@ -8,7 +8,7 @@
     tools:context=".Activities.FridgeActivity">
 
     <LinearLayout
-        android:id="@+id/grocery_top_bar"
+        android:id="@+id/fridge_top_bar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@android:color/background_dark"
@@ -78,7 +78,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/grocery_top_bar"
+        app:layout_constraintTop_toBottomOf="@+id/fridge_top_bar"
         app:layout_constraintVertical_bias="0.0">
 
     </android.support.v7.widget.RecyclerView>

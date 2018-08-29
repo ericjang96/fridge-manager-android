@@ -55,7 +55,6 @@ public class UserGroceryListsActivity extends AppCompatActivity {
     public void showAddListPrompt(View view){
         AddNewUserGroceryListDialogFragment dialog = new AddNewUserGroceryListDialogFragment();
         dialog.show(getSupportFragmentManager(), "Add Ingredient Dialog");
-
     }
 
     public void refresh(View view) {

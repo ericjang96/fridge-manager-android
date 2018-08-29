@@ -27,27 +27,9 @@ import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
-public class UserRestClient {
+public class UserRestClient extends AbstractRestClient {
 
     private static final String TAG = "UserRestClient";
-    private static String BASE_URL = GlobalVariables.connectionURL;
-    private static AsyncHttpClient client = new AsyncHttpClient();
-
-    private static void post(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        client.post(getAbsoluteUrl(url), params, responseHandler);
-    }
-
-    private static void get(String url, AsyncHttpResponseHandler responseHandler){
-        client.get(getAbsoluteUrl(url), responseHandler);
-    }
-
-    private static void put(String url, RequestParams params, AsyncHttpResponseHandler responseHandler){
-        client.put(getAbsoluteUrl(url), params, responseHandler);
-    }
-
-    private static String getAbsoluteUrl(String relativeUrl) {
-        return BASE_URL + relativeUrl;
-    }
 
     public static void getUserExists(String username, String password, final ILoginCallback loginActivity){
         String urlWithQuery = "/users?user_id=" + username + "&password=" + password;

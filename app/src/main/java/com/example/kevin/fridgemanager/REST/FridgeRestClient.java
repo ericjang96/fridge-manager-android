@@ -27,27 +27,8 @@ import com.example.kevin.fridgemanager.DomainModels.Ingredient;
 import com.example.kevin.fridgemanager.Translators.FridgeToListOfIngredientsTranslator;
 import cz.msebera.android.httpclient.Header;
 
-public class FridgeRestClient {
+public class FridgeRestClient extends AbstractRestClient{
     private static final String TAG = "FridgeRestClient";
-
-    private static AsyncHttpClient client = new AsyncHttpClient();
-    private static String BASE_URL = GlobalVariables.connectionURL;
-
-    private static String getAbsoluteUrl(String relativeUrl) {
-        return BASE_URL + relativeUrl;
-    }
-
-    private static void get(String url, AsyncHttpResponseHandler responseHandler) {
-        client.get(getAbsoluteUrl(url), responseHandler);
-    }
-
-    private static void put(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        client.put(getAbsoluteUrl(url), params, responseHandler);
-    }
-
-    private static void post(String url, RequestParams params, AsyncHttpResponseHandler responseHandler){
-        client.post(getAbsoluteUrl(url), params, responseHandler);
-    }
 
     public static void createNewFridge(User user){
         RequestParams params = new RequestParams();

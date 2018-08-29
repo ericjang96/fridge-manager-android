@@ -29,25 +29,28 @@ public class GroceryListsViewAdapter extends RecyclerView.Adapter<GroceryListsVi
         this.context = context;
     }
 
-    class GroceryListsViewHolder extends RecyclerView.ViewHolder {
+    protected class GroceryListsViewHolder extends RecyclerView.ViewHolder {
 
         //widgets
         TextView mGroceryListName;
         Button mDeleteButton;
         CardView mCardView;
 
-        GroceryListsViewHolder(@NonNull View groceryListItemView) {
-            super(groceryListItemView);
+        GroceryListsViewHolder(@NonNull View groceryListView) {
+            super(groceryListView);
 
-            mCardView = groceryListItemView.findViewById(R.id.cardview_grocery_list);
-            mGroceryListName = groceryListItemView.findViewById(R.id.grocery_list_name);
-            mDeleteButton = groceryListItemView.findViewById(R.id.grocery_list_delete_button);
+            mCardView = groceryListView.findViewById(R.id.cardview_grocery_list);
+            mGroceryListName = groceryListView.findViewById(R.id.grocery_list_name);
+            mDeleteButton = groceryListView.findViewById(R.id.grocery_list_delete_button);
 
             mCardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    String name = mGroceryListName.getText().toString();
                     view.setClickable(false);
                     Intent intent = new Intent(context, GroceryListActivity.class);
+                    intent.putExtra("grocery_list_id", getIdByName(name));
+                    intent.putExtra("name", mGroceryListName.getText().toString());
                     context.startActivity(intent);
                     view.setClickable(true);
                 }
@@ -96,5 +99,14 @@ public class GroceryListsViewAdapter extends RecyclerView.Adapter<GroceryListsVi
         groceryLists.add(position, list);
         notifyItemInserted(position);
         notifyItemRangeChanged(position, groceryLists.size());
+    }
+
+    public String getIdByName(String name) {
+        for(int i = 0; i < groceryLists.size(); i++){
+            if(groceryLists.get(i).getName().equals(name))
+                return groceryLists.get(i).getGroceryListId();
+        }
+
+        return "default";
     }
 }

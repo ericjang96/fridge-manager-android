@@ -15,6 +15,7 @@ import com.example.kevin.fridgemanager.Activities.UserGroceryListsActivity;
 import com.example.kevin.fridgemanager.DomainModels.GroceryList;
 import com.example.kevin.fridgemanager.Generators.UniqueIdGenerator;
 import com.example.kevin.fridgemanager.R;
+import com.example.kevin.fridgemanager.REST.GroceryListRestClient;
 import com.example.kevin.fridgemanager.REST.UserRestClient;
 
 public class AddNewUserGroceryListDialogFragment extends DialogFragment {
@@ -50,6 +51,7 @@ public class AddNewUserGroceryListDialogFragment extends DialogFragment {
 
                 GroceryList list = new GroceryList(name, grocery_list_id);
                 UserRestClient.insertNewGroceryList(list);
+                GroceryListRestClient.insertNewGroceryList(list);
                 getDialog().dismiss();
 
                 assert activity != null;
