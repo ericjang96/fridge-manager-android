@@ -37,7 +37,7 @@ public class GroceryItemsViewAdapter extends RecyclerView.Adapter<GroceryItemsVi
     protected class GroceryItemsViewHolder extends RecyclerView.ViewHolder implements ExpandableLayout.OnExpansionUpdateListener{
         // widgets
         private CardView mCardView;
-        private TextView mItemName, mItemComment;
+        private TextView mItemName, mItemComment, mItemAmount;
         private Button mDeleteButton;
         private ExpandableLayout mExpandableLayout;
         private ImageView mExpandIcon;
@@ -49,6 +49,7 @@ public class GroceryItemsViewAdapter extends RecyclerView.Adapter<GroceryItemsVi
             mCardView = groceryItemView.findViewById(R.id.cardview_grocery_item);
             mItemName = groceryItemView.findViewById(R.id.grocery_item_name);
             mItemComment = groceryItemView.findViewById(R.id.grocery_item_comment);
+            mItemAmount = groceryItemView.findViewById(R.id.grocery_item_amount);
             mDeleteButton = groceryItemView.findViewById(R.id.delete_grocery_item_button);
             mExpandIcon = groceryItemView.findViewById(R.id.grocery_item_expand_icon);
 
@@ -100,6 +101,7 @@ public class GroceryItemsViewAdapter extends RecyclerView.Adapter<GroceryItemsVi
         final GroceryItem item = groceryItems.get(position);
         final String name = item.getName();
         final String comment = item.getComment();
+        final String amount = String.valueOf(item.getAmount());
 
         if(comment.equals("")){
             groceryItemsViewHolder.mExpandIcon.setVisibility(View.GONE);
@@ -107,6 +109,7 @@ public class GroceryItemsViewAdapter extends RecyclerView.Adapter<GroceryItemsVi
 
         groceryItemsViewHolder.mItemName.setText(name);
         groceryItemsViewHolder.mItemComment.setText(comment);
+        groceryItemsViewHolder.mItemAmount.setText(amount);
     }
 
     @Override
