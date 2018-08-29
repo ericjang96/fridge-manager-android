@@ -14,6 +14,9 @@ import com.example.kevin.fridgemanager.CallbackInterface.IKeyboardChange;
 
 import java.util.Objects;
 
+/**
+ * Created by kevin on Aug 25, 2018
+ **/
 public class KeyboardManager {
     private static final String TAG = "KeyboardManager";
 

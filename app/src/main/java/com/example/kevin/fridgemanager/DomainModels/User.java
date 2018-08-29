@@ -3,6 +3,9 @@ package com.example.kevin.fridgemanager.DomainModels;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Created by kevin on Aug 23, 2018
+ **/
 public class User {
     private String user_id;
     private String password;

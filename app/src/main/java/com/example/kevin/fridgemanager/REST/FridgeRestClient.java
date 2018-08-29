@@ -1,6 +1,3 @@
-/*
-Created by Kevin Kwon on August 03 2018
- */
 package com.example.kevin.fridgemanager.REST;
 
 import android.support.v7.widget.RecyclerView;
@@ -27,6 +24,9 @@ import com.example.kevin.fridgemanager.DomainModels.Ingredient;
 import com.example.kevin.fridgemanager.Translators.FridgeToListOfIngredientsTranslator;
 import cz.msebera.android.httpclient.Header;
 
+/**
+ * Created by kevin on Aug 3, 2018
+ **/
 public class FridgeRestClient extends AbstractRestClient{
     private static final String TAG = "FridgeRestClient";
 

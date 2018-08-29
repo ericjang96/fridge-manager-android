@@ -1,8 +1,8 @@
-/*
-Created by Kevin Kwon on August 02 2018
- */
-
 package com.example.kevin.fridgemanager.Adapters;
+/**
+ * Created by kevin on Aug 2, 2018
+ **/
+
 
 import android.content.Context;
 import android.support.annotation.NonNull;

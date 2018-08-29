@@ -5,6 +5,9 @@ import android.content.SharedPreferences;
 
 import java.util.HashMap;
 
+/**
+ * Created by kevin on Aug 24, 2018
+ **/
 public class SharedPrefs {
     private static SharedPreferences mSharedPref;
 

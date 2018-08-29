@@ -18,6 +18,9 @@ import com.example.kevin.fridgemanager.R;
 import com.example.kevin.fridgemanager.REST.GroceryListRestClient;
 import com.example.kevin.fridgemanager.REST.UserRestClient;
 
+/**
+ * Created by kevin on Aug 28, 2018
+ **/
 public class AddNewUserGroceryListDialogFragment extends DialogFragment {
     private static final String TAG = "AddNewUserGroceryListDi";
 

@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 
 
+/**
+ * Created by kevin on Aug 26, 2018
+ **/
 public class AlertDialogGenerator {
 
     public AlertDialogGenerator(){

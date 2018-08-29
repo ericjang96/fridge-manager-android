@@ -4,6 +4,9 @@ import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.AttributeSet;
 
+/**
+ * Created by kevin on Aug 27, 2018
+ **/
 // Npa stands for No Predictive Animations
 // Fixes an issue with random crashing that came from recycler view trying to pull from a common pool
 // before clean up was done, causing an index out of bounds issue.

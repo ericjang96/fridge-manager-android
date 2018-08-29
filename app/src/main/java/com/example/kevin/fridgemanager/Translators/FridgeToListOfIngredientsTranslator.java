@@ -1,6 +1,3 @@
-/*
-Created by Kevin Kwon on August 04 2018
- */
 package com.example.kevin.fridgemanager.Translators;
 
 import org.json.JSONArray;
@@ -12,6 +9,9 @@ import java.util.List;
 
 import com.example.kevin.fridgemanager.DomainModels.Ingredient;
 
+/**
+ * Created by kevin on Aug 4, 2018
+ **/
 public class FridgeToListOfIngredientsTranslator {
     public static List<Ingredient> translate(JSONArray fridgeResponse) throws JSONException {
         List<Ingredient> result = new ArrayList<>();

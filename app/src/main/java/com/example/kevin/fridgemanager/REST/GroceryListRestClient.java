@@ -19,6 +19,9 @@ import org.json.JSONObject;
 
 import cz.msebera.android.httpclient.Header;
 
+/**
+ * Created by kevin on Aug 29, 2018
+ **/
 public class GroceryListRestClient extends AbstractRestClient {
 
     private static String grocery_list_id;

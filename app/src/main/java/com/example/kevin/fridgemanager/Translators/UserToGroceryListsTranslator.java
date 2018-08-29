@@ -9,6 +9,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Created by kevin on Aug 28, 2018
+ **/
 public class UserToGroceryListsTranslator {
     public static List<GroceryList> translate(JSONObject user) throws JSONException {
         List<GroceryList> result = new ArrayList<>();

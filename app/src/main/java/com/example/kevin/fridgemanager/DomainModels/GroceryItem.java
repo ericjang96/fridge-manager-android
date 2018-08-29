@@ -1,5 +1,8 @@
 package com.example.kevin.fridgemanager.DomainModels;
 
+/**
+ * Created by kevin on Aug 28, 2018
+ **/
 public class GroceryItem {
     private String name;
     private int amount;

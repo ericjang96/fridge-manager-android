@@ -1,5 +1,9 @@
 package com.example.kevin.fridgemanager.Activities;
 
+/**
+ * Created by kevin on Aug 23, 2018
+ **/
+
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;

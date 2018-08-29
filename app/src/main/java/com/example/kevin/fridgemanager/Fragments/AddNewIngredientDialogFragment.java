@@ -1,6 +1,3 @@
-/*
-Created by Kevin Kwon on August 13 2018
- */
 package com.example.kevin.fridgemanager.Fragments;
 
 
@@ -23,6 +20,9 @@ import com.example.kevin.fridgemanager.REST.FridgeRestClient;
 import java.util.Calendar;
 import java.util.Date;
 
+/**
+ * Created by kevin on Aug 13, 2018
+ **/
 public class AddNewIngredientDialogFragment extends DialogFragment {
     private static final String TAG = "AddIngredientDialogFrag";
 

@@ -1,6 +1,3 @@
-/*
-Created by Kevin Kwon on August 13 2018
- */
 package com.example.kevin.fridgemanager.Fragments;
 
 import android.os.Bundle;
@@ -22,6 +19,9 @@ import com.example.kevin.fridgemanager.REST.FridgeRestClient;
 import java.util.List;
 
 
+/**
+ * Created by kevin on Aug 13, 2018
+ **/
 public class EditIngredientDialogFragment extends DialogFragment {
     private static final String TAG = "EditIngredientDialogFra";
 

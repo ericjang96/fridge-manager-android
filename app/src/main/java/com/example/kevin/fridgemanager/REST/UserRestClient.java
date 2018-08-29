@@ -27,6 +27,9 @@ import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
+/**
+ * Created by kevin on Aug 23, 2018
+ **/
 public class UserRestClient extends AbstractRestClient {
 
     private static final String TAG = "UserRestClient";

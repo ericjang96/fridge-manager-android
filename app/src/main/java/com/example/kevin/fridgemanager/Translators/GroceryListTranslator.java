@@ -10,6 +10,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Created by kevin on Aug 29, 2018
+ **/
 public class GroceryListTranslator {
     public static GroceryList translate(JSONObject groceryList) throws JSONException {
         String grocery_list_id = groceryList.getString("grocery_list_id");

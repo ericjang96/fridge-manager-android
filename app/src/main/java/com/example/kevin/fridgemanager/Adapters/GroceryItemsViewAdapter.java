@@ -1,5 +1,9 @@
 package com.example.kevin.fridgemanager.Adapters;
 
+/**
+ * Created by kevin on Aug 29, 2018
+ **/
+
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
@@ -8,8 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;

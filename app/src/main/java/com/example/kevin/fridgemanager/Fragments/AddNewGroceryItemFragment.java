@@ -15,6 +15,9 @@ import com.example.kevin.fridgemanager.DomainModels.GroceryItem;
 import com.example.kevin.fridgemanager.R;
 import com.example.kevin.fridgemanager.REST.GroceryListRestClient;
 
+/**
+ * Created by kevin on Aug 29, 2018
+ **/
 public class AddNewGroceryItemFragment extends DialogFragment {
 
     //widgets

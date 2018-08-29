@@ -3,6 +3,9 @@ package com.example.kevin.fridgemanager.DomainModels;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Created by kevin on Aug 27, 2018
+ **/
 public class GroceryList {
     private String name;
     private String grocery_list_id;

@@ -1,4 +1,8 @@
 package com.example.kevin.fridgemanager.Adapters;
+/**
+ * Created by kevin on Aug 27, 2018
+ **/
+
 
 import android.content.Context;
 import android.content.Intent;

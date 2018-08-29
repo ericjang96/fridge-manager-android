@@ -9,6 +9,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Created by kevin on Aug 27, 2018
+ **/
 public class UserJSONArrayToListOfUsernames {
     public static List<String> translate(JSONArray userResponse) throws JSONException {
         List<String> result = new ArrayList<>();

@@ -28,7 +28,9 @@ import cz.msebera.android.httpclient.client.methods.HttpGet;
 import cz.msebera.android.httpclient.impl.client.HttpClientBuilder;
 import cz.msebera.android.httpclient.util.EntityUtils;
 
-
+/**
+ * Created by kevin on Aug 27, 2018
+ **/
 public class GetIngredientsTask extends AsyncTask<Void, Void, List<Ingredient>> {
     // Weak Refernce must be used to prevent memory leaks
     private WeakReference<Activity> activity;

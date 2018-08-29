@@ -5,6 +5,9 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+/**
+ * Created by kevin on Aug 29, 2018
+ **/
 public abstract class AbstractRestClient {
     protected static String BASE_URL = GlobalVariables.connectionURL;
     protected static AsyncHttpClient client = new AsyncHttpClient();

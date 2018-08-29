@@ -1,7 +1,7 @@
-/*
-Created by Kevin Kwon on July 31 2018
- */
 package com.example.kevin.fridgemanager.Activities;
+/**
+ * Created by kevin on July 31, 2018
+ **/
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;

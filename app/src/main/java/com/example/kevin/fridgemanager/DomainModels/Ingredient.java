@@ -1,12 +1,12 @@
-/*
-Created by Kevin Kwon on August 02 2018
- */
 package com.example.kevin.fridgemanager.DomainModels;
 
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
+/**
+ * Created by kevin on Aug 2, 2018
+ **/
 public class Ingredient implements Serializable {
     private String name;
     private Date boughtDate;

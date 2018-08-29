@@ -1,4 +1,8 @@
 package com.example.kevin.fridgemanager.AsyncTasks.User;
+/**
+ * Created by kevin on Aug 27, 2018
+ **/
+
 
 import android.app.Activity;
 import android.os.AsyncTask;

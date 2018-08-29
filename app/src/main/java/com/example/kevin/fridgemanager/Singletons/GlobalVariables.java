@@ -1,5 +1,8 @@
 package com.example.kevin.fridgemanager.Singletons;
 
+/**
+ * Created by kevin on Aug 24, 2018
+ **/
 public class GlobalVariables {
     //Debugging or Server URL
     public static final String connectionURL = "http://10.0.2.2:3000";

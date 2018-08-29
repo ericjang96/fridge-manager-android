@@ -1,5 +1,7 @@
 package com.example.kevin.fridgemanager.Activities;
-
+/**
+ * Created by kevin on Aug 28, 2018
+ **/
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
