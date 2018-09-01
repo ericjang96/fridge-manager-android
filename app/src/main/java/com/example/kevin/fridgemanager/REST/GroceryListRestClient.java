@@ -9,6 +9,7 @@ import com.example.kevin.fridgemanager.Adapters.GroceryItemsViewAdapter;
 import com.example.kevin.fridgemanager.Adapters.GroceryListsViewAdapter;
 import com.example.kevin.fridgemanager.DomainModels.GroceryItem;
 import com.example.kevin.fridgemanager.DomainModels.GroceryList;
+import com.example.kevin.fridgemanager.DomainModels.RecyclerViewItem;
 import com.example.kevin.fridgemanager.Translators.GroceryListTranslator;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -16,6 +17,8 @@ import com.loopj.android.http.RequestParams;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -26,7 +29,7 @@ public class GroceryListRestClient extends AbstractRestClient {
 
     private static String grocery_list_id;
 
-    public static void getGroceryListWithId(String grocery_list_id, final RecyclerView rv, final GroceryListActivity activity){
+    public static void getGroceryListWithId(final RecyclerView rv,  final View loading, final GroceryListActivity activity){
         String urlWithQuery = "/groceryLists?grocery_list_id=" + grocery_list_id;
 
         get(urlWithQuery, new JsonHttpResponseHandler(){
@@ -35,10 +38,14 @@ public class GroceryListRestClient extends AbstractRestClient {
                 try {
                     JSONObject JSONList = response.getJSONObject(0);
                     GroceryList groceryList = GroceryListTranslator.translate(JSONList);
-                    GroceryItemsViewAdapter adapter = new GroceryItemsViewAdapter(groceryList.getGroceryItems(), rv.getContext());
+                    List<GroceryItem> items = groceryList.getGroceryItems();
+                    GroceryItemsViewAdapter adapter = new GroceryItemsViewAdapter(rv.getContext());
+                    adapter.setList(groceryList.getGroceryItems());
+
                     rv.setAdapter(adapter);
                     rv.setVisibility(View.VISIBLE);
-                    activity.updateList(adapter, groceryList);
+                    loading.setVisibility(View.INVISIBLE);
+                    activity.update(adapter, items);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

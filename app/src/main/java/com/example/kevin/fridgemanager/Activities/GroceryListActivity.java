@@ -10,10 +10,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.kevin.fridgemanager.Activities.Helpers.RecyclerViewActivityHelper;
 import com.example.kevin.fridgemanager.Adapters.GroceryItemsViewAdapter;
 import com.example.kevin.fridgemanager.Adapters.GroceryListsViewAdapter;
+import com.example.kevin.fridgemanager.Adapters.RecyclerViewAdapter;
 import com.example.kevin.fridgemanager.DomainModels.GroceryItem;
 import com.example.kevin.fridgemanager.DomainModels.GroceryList;
+import com.example.kevin.fridgemanager.DomainModels.Ingredient;
+import com.example.kevin.fridgemanager.DomainModels.RecyclerViewItem;
 import com.example.kevin.fridgemanager.Fragments.AddNewGroceryItemFragment;
 import com.example.kevin.fridgemanager.Fragments.AddNewUserGroceryListDialogFragment;
 import com.example.kevin.fridgemanager.Managers.NpaLinearLayoutManager;
@@ -23,29 +27,37 @@ import com.example.kevin.fridgemanager.REST.GroceryListRestClient;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GroceryListActivity extends AppCompatActivity{
+public class GroceryListActivity extends AppCompatActivity implements RecyclerViewActivity{
 
     //widgets
     private RecyclerView mRecyclerView;
     private NpaLinearLayoutManager mLayoutManager;
     private TextView mListName;
+    private View mLoadingView;
 
     //vars
     private GroceryItemsViewAdapter adapter;
-    private GroceryList groceryList;
+    private List<RecyclerViewItem> groceryItems;
     private String grocery_list_id;
     private String name;
+    private RecyclerViewActivityHelper helper = new RecyclerViewActivityHelper();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grocery_list);
+
+        init();
+    }
+
+    public void init() {
         grocery_list_id = getIntent().getStringExtra("grocery_list_id");
         name = getIntent().getStringExtra("name");
 
         mListName = findViewById(R.id.grocery_list_name);
         mListName.setText(name);
 
+        mLoadingView = findViewById(R.id.grocery_list_refresh_progress_bar);
         mRecyclerView = findViewById(R.id.grocery_items_recycler_view);
         mLayoutManager = new NpaLinearLayoutManager(mRecyclerView.getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -56,40 +68,35 @@ public class GroceryListActivity extends AppCompatActivity{
         mRecyclerView.addItemDecoration(dividerItemDecoration);
 
         GroceryListRestClient.setGroceryListId(grocery_list_id);
-        GroceryListRestClient.getGroceryListWithId(grocery_list_id, mRecyclerView, GroceryListActivity.this);
+        GroceryListRestClient.getGroceryListWithId(mRecyclerView, mLoadingView, GroceryListActivity.this);
     }
 
-    public void updateList(GroceryItemsViewAdapter adapter, GroceryList list){
-        this.adapter = adapter;
-        this.groceryList = list;
+    public void update(RecyclerViewAdapter adapter, List<GroceryItem> items) {
+        this.adapter = (GroceryItemsViewAdapter) adapter;
+        this.groceryItems = toBaseClass(items);
     }
 
-    public void Refresh(View view){
-        GroceryListRestClient.getGroceryListWithId(grocery_list_id, mRecyclerView, GroceryListActivity.this);
+    public void refresh(View view){
+        mRecyclerView.setVisibility(View.GONE);
+        mLoadingView.setVisibility(View.VISIBLE);
+        GroceryListRestClient.getGroceryListWithId(mRecyclerView, mLoadingView, GroceryListActivity.this);
     }
 
-    public void showAddGroceryItem(View view){
+    public void showAddItemPrompt(View view){
         AddNewGroceryItemFragment dialog = new AddNewGroceryItemFragment();
         dialog.show(getSupportFragmentManager(), "Add Item Dialog");
     }
 
     public void addGroceryItem(GroceryItem item){
-        int position = groceryList.getGroceryItems().size();
-        adapter.insertAt(item, position);
-        adapter.notifyItemInserted(position);
-        mRecyclerView.smoothScrollToPosition(position);
+        groceryItems = helper.addItem(groceryItems, item, adapter, mRecyclerView);
     }
 
     public void removeGroceryItem(String name){
-        int position = findPositionByName(groceryList.getGroceryItems(), name);
+        int position = helper.findPositionByName(groceryItems, name);
         adapter.removeAt(position);
     }
 
-    private int findPositionByName(List<GroceryItem> list, String name){
-        for(int i = 0; i < list.size(); i++){
-            if(list.get(i).getName().equals(name))
-                return i;
-        }
-        return -1;
+    public List<RecyclerViewItem> toBaseClass(List<GroceryItem> items){
+        return new ArrayList<RecyclerViewItem>(items);
     }
 }

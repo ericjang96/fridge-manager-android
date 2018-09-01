@@ -3,7 +3,7 @@ package com.example.kevin.fridgemanager.DomainModels;
 /**
  * Created by kevin on Aug 28, 2018
  **/
-public class GroceryItem {
+public class GroceryItem implements RecyclerViewItem{
     private String name;
     private int amount;
     private String comment;

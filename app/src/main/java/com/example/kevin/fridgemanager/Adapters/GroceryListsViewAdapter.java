@@ -18,34 +18,28 @@ import android.widget.TextView;
 import com.example.kevin.fridgemanager.Activities.GroceryListActivity;
 import com.example.kevin.fridgemanager.Activities.UserGroceryListsActivity;
 import com.example.kevin.fridgemanager.DomainModels.GroceryList;
+import com.example.kevin.fridgemanager.DomainModels.Ingredient;
 import com.example.kevin.fridgemanager.R;
 import com.example.kevin.fridgemanager.REST.UserRestClient;
 
 import java.util.List;
 
-public class GroceryListsViewAdapter extends RecyclerView.Adapter<GroceryListsViewAdapter.GroceryListsViewHolder> {
-    //vars
-    private List<GroceryList> groceryLists;
-    private Context context;
-
-    public GroceryListsViewAdapter(List<GroceryList> list, Context context) {
-        this.groceryLists = list;
-        this.context = context;
+public class GroceryListsViewAdapter extends RecyclerViewAdapter  {
+    public GroceryListsViewAdapter(Context context) {
+        super(context);
     }
 
-    protected class GroceryListsViewHolder extends RecyclerView.ViewHolder {
+    public class GroceryListsViewHolder extends GenericViewHolder {
 
         //widgets
         TextView mGroceryListName;
         Button mDeleteButton;
         CardView mCardView;
+        Context context = getContext();
 
-        GroceryListsViewHolder(@NonNull View groceryListView) {
-            super(groceryListView);
-
-            mCardView = groceryListView.findViewById(R.id.cardview_grocery_list);
-            mGroceryListName = groceryListView.findViewById(R.id.grocery_list_name);
-            mDeleteButton = groceryListView.findViewById(R.id.grocery_list_delete_button);
+        GroceryListsViewHolder(View view) {
+            super(view);
+            initialize();
 
             mCardView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -70,6 +64,32 @@ public class GroceryListsViewAdapter extends RecyclerView.Adapter<GroceryListsVi
                 }
             });
         }
+
+        protected void initialize(){
+            mCardView = (CardView) initViewAndGetView(R.id.cardview_grocery_list);
+            mGroceryListName = (TextView) initViewAndGetView(R.id.grocery_list_name);
+            mDeleteButton = (Button) initViewAndGetView(R.id.grocery_list_delete_button);
+        }
+    }
+
+    @Override
+    protected View createView(Context context, ViewGroup viewGroup, int viewType) {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.cardview_grocery_list, viewGroup, false);
+        return view;
+    }
+
+    @Override
+    protected void bindView(Object item, GenericViewHolder viewHolder) {
+        GroceryList list = (GroceryList) item;
+        if (item != null) {
+            viewHolder.getTextView(R.id.grocery_list_name).setText(list.getName());
+        }
+    }
+
+    @Override
+    protected void bindViewPayloads(Object item, GenericViewHolder viewHolder, @NonNull List payloads) {
+        bindView(item, viewHolder);
     }
 
     @NonNull
@@ -80,37 +100,17 @@ public class GroceryListsViewAdapter extends RecyclerView.Adapter<GroceryListsVi
     }
 
     @Override
-    public void onBindViewHolder(@NonNull GroceryListsViewHolder groceryListsViewHolder, int position) {
-        final GroceryList list = groceryLists.get(position);
-        final String name = list.getName();
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
 
-        groceryListsViewHolder.mGroceryListName.setText(name);
-    }
-
-    @Override
-    public int getItemCount() {
-        return groceryLists.size();
     }
 
 
-    public void removeAt(int position){
-        groceryLists.remove(position);
-        notifyItemRemoved(position);
-        notifyItemRangeChanged(position, groceryLists.size());
-    }
-
-    public void insertAt(GroceryList list, int position){
-        groceryLists.add(position, list);
-        notifyItemInserted(position);
-        notifyItemRangeChanged(position, groceryLists.size());
-    }
-
-    public String getIdByName(String name) {
-        for(int i = 0; i < groceryLists.size(); i++){
-            if(groceryLists.get(i).getName().equals(name))
-                return groceryLists.get(i).getGroceryListId();
+    private String getIdByName(String name) {
+        List<GroceryList> lists = getList();
+        for(int i = 0; i < lists.size(); i++){
+            if(lists.get(i).getName().equals(name))
+                return lists.get(i).getGroceryListId();
         }
-
-        return "default";
+        return "name_not_found";
     }
 }

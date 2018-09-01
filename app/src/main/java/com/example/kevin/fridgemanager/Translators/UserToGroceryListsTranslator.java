@@ -1,6 +1,7 @@
 package com.example.kevin.fridgemanager.Translators;
 
 import com.example.kevin.fridgemanager.DomainModels.GroceryList;
+import com.example.kevin.fridgemanager.DomainModels.RecyclerViewItem;
 
 import org.json.JSONArray;
 import org.json.JSONException;

@@ -7,7 +7,7 @@ import java.util.Date;
 /**
  * Created by kevin on Aug 2, 2018
  **/
-public class Ingredient implements Serializable {
+public class Ingredient implements Serializable, RecyclerViewItem {
     private String name;
     private Date boughtDate;
     private Date expiryDate;

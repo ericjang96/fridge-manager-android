@@ -1,16 +1,9 @@
 package com.example.kevin.fridgemanager.REST;
 
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
 
-import com.example.kevin.fridgemanager.Adapters.IngredientsViewAdapter;
-import com.example.kevin.fridgemanager.CallbackInterface.IFridgeUpdateIngredients;
 import com.example.kevin.fridgemanager.DomainModels.User;
-import com.example.kevin.fridgemanager.Singletons.GlobalVariables;
 import com.example.kevin.fridgemanager.Singletons.SharedPrefs;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
@@ -18,10 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.List;
-
 import com.example.kevin.fridgemanager.DomainModels.Ingredient;
-import com.example.kevin.fridgemanager.Translators.FridgeToListOfIngredientsTranslator;
 import cz.msebera.android.httpclient.Header;
 
 /**
@@ -39,33 +29,6 @@ public class FridgeRestClient extends AbstractRestClient{
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 Log.i(TAG, "onSuccess: Successfully created a new Fridge!");
-            }
-        });
-    }
-
-    public static void getFridgeData(final RecyclerView rv, final View loading, final IFridgeUpdateIngredients callback){
-        String fridge_id = SharedPrefs.read("fridge_id");
-        get("/fridges/ingredients/view?fridge_id="+ fridge_id, new JsonHttpResponseHandler() {
-            @Override
-            public void onStart(){
-                System.out.println("Getting data...");
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                System.out.println("Successfully obtained the response!");
-                List<Ingredient> ingredients = null;
-                try {
-                    ingredients = FridgeToListOfIngredientsTranslator.translate(response);
-                }
-                catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                IngredientsViewAdapter adapter = new IngredientsViewAdapter(ingredients, rv.getContext());
-                rv.setAdapter(adapter);
-                rv.setVisibility(View.VISIBLE);
-                loading.setVisibility(View.INVISIBLE);
-                callback.updateIngredients();
             }
         });
     }

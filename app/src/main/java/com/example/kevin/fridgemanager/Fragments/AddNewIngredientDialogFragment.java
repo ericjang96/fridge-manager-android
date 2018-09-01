@@ -59,15 +59,15 @@ public class AddNewIngredientDialogFragment extends DialogFragment {
                     String amount = mEditAmount.getText().toString();
 
                     Integer amountInt = Integer.parseInt(amount);
-
                     Ingredient ingredient = new Ingredient(name, amountInt, amountUnit);
-                    FridgeRestClient.insertIngredientData(ingredient);
-                    getDialog().dismiss();
 
                     // If ingredient does not exist
                     if(!activity.tryUpdateItemAmount(ingredient, amount)){
                         activity.addIngredient(ingredient);
                     }
+
+                    FridgeRestClient.insertIngredientData(ingredient);
+                    getDialog().dismiss();
                 }
                 catch(Exception e){
                     Log.e(TAG, "sendIngredientRequest: " + e.getMessage());

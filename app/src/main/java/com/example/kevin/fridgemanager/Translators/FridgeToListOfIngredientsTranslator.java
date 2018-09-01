@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.kevin.fridgemanager.DomainModels.Ingredient;
+import com.example.kevin.fridgemanager.DomainModels.RecyclerViewItem;
 
 /**
  * Created by kevin on Aug 4, 2018

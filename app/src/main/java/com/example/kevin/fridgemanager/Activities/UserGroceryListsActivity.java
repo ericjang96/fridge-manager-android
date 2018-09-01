@@ -10,16 +10,21 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.example.kevin.fridgemanager.Activities.Helpers.RecyclerViewActivityHelper;
 import com.example.kevin.fridgemanager.Adapters.GroceryListsViewAdapter;
+import com.example.kevin.fridgemanager.Adapters.RecyclerViewAdapter;
 import com.example.kevin.fridgemanager.DomainModels.GroceryList;
+import com.example.kevin.fridgemanager.DomainModels.Ingredient;
+import com.example.kevin.fridgemanager.DomainModels.RecyclerViewItem;
 import com.example.kevin.fridgemanager.Fragments.AddNewUserGroceryListDialogFragment;
 import com.example.kevin.fridgemanager.Managers.NpaLinearLayoutManager;
 import com.example.kevin.fridgemanager.R;
 import com.example.kevin.fridgemanager.REST.UserRestClient;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class UserGroceryListsActivity extends AppCompatActivity {
+public class UserGroceryListsActivity extends AppCompatActivity implements RecyclerViewActivity {
 
     //widgets
     private RecyclerView mRecyclerView;
@@ -27,14 +32,19 @@ public class UserGroceryListsActivity extends AppCompatActivity {
     private View mLoadingView;
 
     //vars
-    private List<GroceryList> groceryLists;
+    private List<RecyclerViewItem> groceryLists;
     private GroceryListsViewAdapter adapter;
+    private RecyclerViewActivityHelper helper = new RecyclerViewActivityHelper();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_grocery_lists);
 
+        init();
+    }
+
+    public void init() {
         mRecyclerView = findViewById(R.id.grocery_lists_recycler_view);
         mLayoutManager = new NpaLinearLayoutManager(mRecyclerView.getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -47,14 +57,9 @@ public class UserGroceryListsActivity extends AppCompatActivity {
         UserRestClient.getUsersGroceryLists(mRecyclerView, mLoadingView, UserGroceryListsActivity.this);
     }
 
-    public void updateLists(GroceryListsViewAdapter adapter, List<GroceryList> lists){
-        this.adapter = adapter;
-        this.groceryLists = lists;
-    }
-
-    public void showAddListPrompt(View view){
-        AddNewUserGroceryListDialogFragment dialog = new AddNewUserGroceryListDialogFragment();
-        dialog.show(getSupportFragmentManager(), "Add Ingredient Dialog");
+    public void update(RecyclerViewAdapter adapter, List<GroceryList> items) {
+        this.adapter = (GroceryListsViewAdapter) adapter;
+        this.groceryLists = toBaseClass(items);
     }
 
     public void refresh(View view) {
@@ -63,24 +68,23 @@ public class UserGroceryListsActivity extends AppCompatActivity {
         UserRestClient.getUsersGroceryLists(mRecyclerView, mLoadingView,UserGroceryListsActivity.this);
     }
 
+    public void showAddItemPrompt(View view){
+        AddNewUserGroceryListDialogFragment dialog = new AddNewUserGroceryListDialogFragment();
+        dialog.show(getSupportFragmentManager(), "Add Ingredient Dialog");
+    }
+
+
     public void addGroceryList(GroceryList list){
-        int position = groceryLists.size();
-        adapter.insertAt(list, position);
-        adapter.notifyItemInserted(position);
-        mRecyclerView.smoothScrollToPosition(position);
+        groceryLists = helper.addItem(groceryLists, list, adapter, mRecyclerView);
     }
 
     public void removeGroceryList(String name){
-        int position = findPositionByName(groceryLists, name);
+        int position = helper.findPositionByName(groceryLists, name);
         adapter.removeAt(position);
     }
 
-    // finds position of grocery list in the list. If not found, return -1
-    private int findPositionByName(List<GroceryList> list, String name){
-        for(int i = 0; i < list.size(); i++){
-            if(list.get(i).getName().equals(name))
-                return i;
-        }
-        return -1;
+
+    public List<RecyclerViewItem> toBaseClass(List<GroceryList> lists){
+        return new ArrayList<RecyclerViewItem>(lists);
     }
 }

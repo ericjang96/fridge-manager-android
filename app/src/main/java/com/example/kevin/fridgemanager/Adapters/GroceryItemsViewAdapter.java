@@ -5,6 +5,7 @@ package com.example.kevin.fridgemanager.Adapters;
  **/
 
 import android.content.Context;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -25,17 +26,13 @@ import net.cachapa.expandablelayout.ExpandableLayout;
 
 import java.util.List;
 
-public class GroceryItemsViewAdapter extends RecyclerView.Adapter<GroceryItemsViewAdapter.GroceryItemsViewHolder> {
+public class GroceryItemsViewAdapter extends RecyclerViewAdapter  {
 
-    //vars
-    private List<GroceryItem> groceryItems;
-    private Context context;
-    public GroceryItemsViewAdapter(List<GroceryItem> items, Context context){
-        this.groceryItems = items;
-        this.context = context;
+    public GroceryItemsViewAdapter(Context context){
+        super(context);
     }
 
-    protected class GroceryItemsViewHolder extends RecyclerView.ViewHolder implements ExpandableLayout.OnExpansionUpdateListener{
+    protected class GroceryItemsViewHolder extends GenericViewHolder implements ExpandableLayout.OnExpansionUpdateListener{
         // widgets
         private CardView mCardView;
         private TextView mItemName, mItemComment, mItemAmount;
@@ -43,19 +40,12 @@ public class GroceryItemsViewAdapter extends RecyclerView.Adapter<GroceryItemsVi
         private ExpandableLayout mExpandableLayout;
         private ImageView mExpandIcon;
 
+        //vars
+        Context context = getContext();
+
         public GroceryItemsViewHolder(@NonNull View groceryItemView) {
             super(groceryItemView);
-
-            mExpandableLayout = groceryItemView.findViewById(R.id.expandable_layout_grocery_item);
-            mCardView = groceryItemView.findViewById(R.id.cardview_grocery_item);
-            mItemName = groceryItemView.findViewById(R.id.grocery_item_name);
-            mItemComment = groceryItemView.findViewById(R.id.grocery_item_comment);
-            mItemAmount = groceryItemView.findViewById(R.id.grocery_item_amount);
-            mDeleteButton = groceryItemView.findViewById(R.id.delete_grocery_item_button);
-            mExpandIcon = groceryItemView.findViewById(R.id.grocery_item_expand_icon);
-
-            mExpandableLayout.setInterpolator(new AccelerateInterpolator());
-            mExpandableLayout.setOnExpansionUpdateListener(this);
+            initialize();
 
             mCardView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -75,9 +65,8 @@ public class GroceryItemsViewAdapter extends RecyclerView.Adapter<GroceryItemsVi
                     activity.removeGroceryItem(name);
                 }
             });
+
         }
-
-
 
         @Override
         public void onExpansionUpdate(float expansionFraction, int state) {
@@ -88,6 +77,47 @@ public class GroceryItemsViewAdapter extends RecyclerView.Adapter<GroceryItemsVi
                 mExpandIcon.setImageResource(R.drawable.ic_expand_more_black_24dp);
             }
         }
+
+        public void initialize(){
+
+            mExpandableLayout = (ExpandableLayout) initViewAndGetView(R.id.expandable_layout_grocery_item);
+            mCardView = (CardView) initViewAndGetView(R.id.cardview_grocery_item);
+            mItemName = (TextView) initViewAndGetView(R.id.grocery_item_name);
+            mItemComment = (TextView) initViewAndGetView(R.id.grocery_item_comment);
+            mItemAmount = (TextView) initViewAndGetView(R.id.grocery_item_amount);
+            mDeleteButton = (Button) initViewAndGetView(R.id.delete_grocery_item_button);
+            mExpandIcon = (ImageView) initViewAndGetView(R.id.grocery_item_expand_icon);
+
+            mExpandableLayout.setInterpolator(new AccelerateInterpolator());
+            mExpandableLayout.setOnExpansionUpdateListener(this);
+        }
+    }
+
+    @Override
+    protected View createView(Context context, ViewGroup viewGroup, int viewType) {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.cardview_grocery_item, viewGroup, false);
+        return view;
+    }
+
+    @Override
+    protected void bindView(Object item, GenericViewHolder viewHolder) {
+        GroceryItem groceryItem = (GroceryItem) item;
+        if(item != null){
+            String trimmedComment = groceryItem.getComment().trim();
+            if(trimmedComment.equals("")){
+                viewHolder.getView(R.id.grocery_item_expand_icon).setVisibility(View.GONE);
+            }
+
+            viewHolder.getTextView(R.id.grocery_item_name).setText(groceryItem.getName());
+            viewHolder.getTextView(R.id.grocery_item_amount).setText(String.valueOf(groceryItem.getAmount()));
+            viewHolder.getTextView(R.id.grocery_item_comment).setText(groceryItem.getComment());
+        }
+    }
+
+    @Override
+    protected void bindViewPayloads(Object item, GenericViewHolder viewHolder, @NonNull List payloads) {
+        bindView(item, viewHolder);
     }
 
     @NonNull
@@ -96,39 +126,4 @@ public class GroceryItemsViewAdapter extends RecyclerView.Adapter<GroceryItemsVi
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.cardview_grocery_item, viewGroup, false);
         return new GroceryItemsViewHolder(v);
     }
-
-    @Override
-    public void onBindViewHolder(@NonNull GroceryItemsViewHolder groceryItemsViewHolder, int position) {
-        final GroceryItem item = groceryItems.get(position);
-        final String name = item.getName();
-        final String comment = item.getComment();
-        final String amount = String.valueOf(item.getAmount());
-
-        if(comment.equals("")){
-            groceryItemsViewHolder.mExpandIcon.setVisibility(View.GONE);
-        }
-
-        groceryItemsViewHolder.mItemName.setText(name);
-        groceryItemsViewHolder.mItemComment.setText(comment);
-        groceryItemsViewHolder.mItemAmount.setText(amount);
-    }
-
-    @Override
-    public int getItemCount() {
-        return groceryItems.size();
-    }
-
-
-    public void insertAt(GroceryItem item, int position){
-        groceryItems.add(position, item);
-        notifyItemInserted(position);
-        notifyItemRangeChanged(position, groceryItems.size());
-    }
-
-    public void removeAt(int position){
-        groceryItems.remove(position);
-        notifyItemRemoved(position);
-        notifyItemRangeChanged(position, groceryItems.size());
-    }
-
 }

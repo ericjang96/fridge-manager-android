@@ -1,13 +1,7 @@
 package com.example.kevin.fridgemanager.Adapters;
-/**
- * Created by kevin on Aug 2, 2018
- **/
-
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -17,53 +11,41 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.kevin.fridgemanager.Activities.FridgeActivity;
+import com.example.kevin.fridgemanager.DomainModels.Ingredient;
 import com.example.kevin.fridgemanager.Fragments.EditIngredientDialogFragment;
 import com.example.kevin.fridgemanager.R;
+import com.example.kevin.fridgemanager.REST.FridgeRestClient;
 
 import java.util.List;
 
-import com.example.kevin.fridgemanager.DomainModels.Ingredient;
-import com.example.kevin.fridgemanager.REST.FridgeRestClient;
+/**
+ * Created by kevin on Aug 30, 2018
+ **/
+public class IngredientsViewAdapter extends RecyclerViewAdapter{
 
-// Adapter used for the recycler view that displays all ingredients in a fridge
-public class IngredientsViewAdapter extends RecyclerView.Adapter<IngredientsViewAdapter.IngredientViewHolder> {
-    //vars
-    private List<Ingredient> ingredients;
-    private Context context;
-
-    public IngredientsViewAdapter(List<Ingredient> ingredients, Context context){
-        this.ingredients = ingredients;
-        this.context = context;
+    public IngredientsViewAdapter(Context context) {
+        super(context);
     }
 
-    // Ingredient view holder that references the card view defined to hold one ingredient item
-    // class defined within scope of the package
-    class IngredientViewHolder extends RecyclerView.ViewHolder {
+    // View Holder for ingredients
+    protected class TestIngredientsViewHolder extends GenericViewHolder{
         //widgets
-        TextView mIngredientName, mIngredientAmount, mIngredientUnit;
-        Button mInsertButton, mRemoveButton, mDeleteButton;
+        TextView ingredientName, ingredientAmount, ingredientUnit;
+        Button insertButton, removeButton, deleteButton;
         EditTextListener editTextListener;
 
-        IngredientViewHolder(View ingredientCardItemView, EditTextListener editTextListener) {
-            super(ingredientCardItemView);
+        //vars
+        Context context = getContext();
 
-            // text listener updates UI when http calls are made to update ingredients
-            this.editTextListener = editTextListener;
-
-            // widgets
-            mIngredientName = ingredientCardItemView.findViewById(R.id.ingredient_name);
-            mIngredientAmount = ingredientCardItemView.findViewById(R.id.ingredient_amount);
-            mIngredientUnit = ingredientCardItemView.findViewById(R.id.ingredient_unit);
-            mInsertButton = ingredientCardItemView.findViewById(R.id.add_ingredient_button);
-            mRemoveButton = ingredientCardItemView.findViewById(R.id.remove_ingredient_button);
-            mDeleteButton = ingredientCardItemView.findViewById(R.id.delete_ingredient_button);
-            mIngredientAmount.addTextChangedListener(editTextListener);
+        protected TestIngredientsViewHolder(View view) {
+            super(view);
+            initialize();
 
             // When clicking the + button, opens up a new EditIngredientDialogFragment
-            mInsertButton.setOnClickListener(new View.OnClickListener() {
+            insertButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Ingredient ingredient = new Ingredient(mIngredientName.getText().toString(), Integer.parseInt(mIngredientAmount.getText().toString()), mIngredientUnit.getText().toString());
+                    Ingredient ingredient = new Ingredient(ingredientName.getText().toString(), Integer.parseInt(ingredientAmount.getText().toString()), ingredientUnit.getText().toString());
                     EditIngredientDialogFragment editDialog = EditIngredientDialogFragment.newInstance("insert", ingredient);
                     FridgeActivity activity = (FridgeActivity) context;
                     editDialog.show(activity.getSupportFragmentManager(), "edit dialog");
@@ -71,10 +53,10 @@ public class IngredientsViewAdapter extends RecyclerView.Adapter<IngredientsView
             });
 
             // When clicking the - button, opens up a new EditIngredientDialogFragment
-            mRemoveButton.setOnClickListener(new View.OnClickListener() {
+            removeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Ingredient ingredient = new Ingredient(mIngredientName.getText().toString(), Integer.parseInt(mIngredientAmount.getText().toString()), mIngredientUnit.getText().toString());
+                    Ingredient ingredient = new Ingredient(ingredientName.getText().toString(), Integer.parseInt(ingredientAmount.getText().toString()), ingredientUnit.getText().toString());
                     EditIngredientDialogFragment editDialog = EditIngredientDialogFragment.newInstance("remove", ingredient);
                     FridgeActivity activity = (FridgeActivity) context;
                     editDialog.show(activity.getSupportFragmentManager(), "edit dialog");
@@ -82,93 +64,91 @@ public class IngredientsViewAdapter extends RecyclerView.Adapter<IngredientsView
             });
 
             // Delete button removes whole ingredient
-            mDeleteButton.setOnClickListener(new View.OnClickListener() {
+            deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    String name = mIngredientName.getText().toString();
+                    String name = ingredientName.getText().toString();
                     FridgeRestClient.deleteWholeIngredient(name);
                     FridgeActivity activity = (FridgeActivity) context;
                     activity.removeWholeIngredient(name);
                 }
             });
         }
+
+        protected void initialize(){
+            ingredientName = (TextView) initViewAndGetView(R.id.ingredient_name);
+            ingredientAmount = (TextView) initViewAndGetView(R.id.ingredient_amount);
+            ingredientUnit = (TextView) initViewAndGetView(R.id.ingredient_unit);
+
+            insertButton = (Button) initViewAndGetView(R.id.add_ingredient_button);
+            removeButton = (Button) initViewAndGetView(R.id.remove_ingredient_button);
+            deleteButton = (Button) initViewAndGetView(R.id.delete_ingredient_button);
+
+            editTextListener = new EditTextListener();
+            setTextWatcher(editTextListener);
+            ingredientAmount.addTextChangedListener(editTextListener);
+        }
     }
 
-
-
-    // Return the view holder once created
-    @NonNull
+    // Creating view holder
     @Override
-    public IngredientViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int position) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview_ingredient, parent, false);
-        return new IngredientViewHolder(v, new EditTextListener());
+    public TestIngredientsViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.cardview_ingredient, viewGroup, false);
+        return new TestIngredientsViewHolder(view);
     }
 
-
-    // Update a part of view holder you are interested in
+    // Creating the view
     @Override
-    public void onBindViewHolder(@NonNull IngredientViewHolder holder, int position, @NonNull List<Object> payloads) {
-        holder.editTextListener.updatePosition(holder.getAdapterPosition());
+    protected View createView(final Context context, ViewGroup viewGroup, int viewType) {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.cardview_ingredient, viewGroup, false);
+        return view;
+    }
+
+    // How to bind view with data
+    @Override
+    protected void bindView(Object item, GenericViewHolder viewHolder) {
+        Ingredient ingredient = (Ingredient) item;
+        if (item != null) {
+            viewHolder.getTextView(R.id.ingredient_name).setText(ingredient.getName());
+            viewHolder.getTextView(R.id.ingredient_amount).setText(String.valueOf(ingredient.getAmount()));
+            viewHolder.getTextView(R.id.ingredient_unit).setText(ingredient.getUnit());
+        }
+    }
+
+    // Bind view when extra arguments are given
+    @Override
+    protected void bindViewPayloads(Object item, GenericViewHolder viewHolder, @NonNull List payloads) {
+        EditTextListener editTextListener = (EditTextListener) viewHolder.getTextWatcher();
+        int position = viewHolder.getAdapterPosition();
+        editTextListener.updatePosition(position);
+
+        TextView ingredientAmount = viewHolder.getTextView(R.id.ingredient_amount);
 
         //TODO: right now assuming notifyItemChanged is only called by update Item Number for this adapter
         // TODO: which might be true, but should change the parameters for more robust handling
         if(!payloads.isEmpty()) {
             String amt = payloads.get(0).toString();
-            Integer originalValue = Integer.parseInt(holder.mIngredientAmount.getText().toString());
+            Integer originalValue = Integer.parseInt(ingredientAmount.getText().toString());
             Integer additionalValue = Integer.parseInt(amt);
 
             Integer total = originalValue + additionalValue;
             if(total >= 0){
-                holder.mIngredientAmount.setText(String.valueOf(originalValue + additionalValue));
+                ingredientAmount.setText(String.valueOf(originalValue + additionalValue));
             }
             else{
-                holder.mIngredientAmount.setText("0");
+                ingredientAmount.setText("0");
             }
         }
         else {
-            super.onBindViewHolder(holder, position, payloads);
+            bindView(item, viewHolder);
         }
     }
-
-
-    // This method defines the way each ingredient data from the list should bind with the view holder
-    // Used to update the whole recycler view
-    @Override
-    public void onBindViewHolder(@NonNull final IngredientViewHolder holder, int position) {
-        final Ingredient currentIngred = ingredients.get(position);
-        final String name = currentIngred.getName();
-        int amount = currentIngred.getAmount();
-        String unit = currentIngred.getUnit();
-
-        // Don't display "number"
-        if(unit.equals("number")){
-            unit = "";
-        }
-
-        holder.mIngredientName.setText(name);
-        holder.mIngredientAmount.setText(String.valueOf(amount));
-        holder.mIngredientUnit.setText(unit);
-    }
-
-    @Override
-    public int getItemCount() {
-        return ingredients.size();
-    }
-
-    @Override
-    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
-        super.onAttachedToRecyclerView(recyclerView);
-    }
-
-    public List<Ingredient> getIngredients(){
-        return ingredients;
-    }
-
 
     // Referencing https://stackoverflow.com/questions/31844373/saving-edittext-content-in-recyclerview
     // A text listener is required to make sure that a changed item in the recycler view will have its position
     // updated correctly to display once recycled (scrolled far down and back up).
-    private class EditTextListener implements TextWatcher{
+    protected class EditTextListener implements TextWatcher {
         private int position;
 
         public void updatePosition(int position) {
@@ -182,28 +162,15 @@ public class IngredientsViewAdapter extends RecyclerView.Adapter<IngredientsView
 
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            Ingredient updatedIngredient = ingredients.get(position);
+            Ingredient updatedIngredient = (Ingredient) getList().get(position);
             String newAmount = charSequence.toString();
             updatedIngredient.setAmount(Integer.parseInt(newAmount));
-            ingredients.set(position, updatedIngredient);
+            getList().set(position, updatedIngredient);
         }
 
         @Override
         public void afterTextChanged(Editable editable) {
             //no op
         }
-    }
-
-
-    public void removeAt(int position){
-        ingredients.remove(position);
-        notifyItemRemoved(position);
-        notifyItemRangeChanged(position, ingredients.size());
-    }
-
-    public void insertAt(Ingredient ingredient, int position){
-        ingredients.add(position, ingredient);
-        notifyItemInserted(position);
-        notifyItemRangeChanged(position, ingredients.size());
     }
 }

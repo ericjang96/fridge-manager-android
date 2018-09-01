@@ -82,13 +82,16 @@ public class GetIngredientsTask extends AsyncTask<Void, Void, List<Ingredient>> 
     protected void onPostExecute(List<Ingredient> ingredients) {
         FridgeActivity fridgeActivity = (FridgeActivity) activity.get();
         RecyclerView rv = fridgeActivity.findViewById(R.id.recycler_view_ingredients);
-        IngredientsViewAdapter adapter = new IngredientsViewAdapter(ingredients, rv.getContext());
+
+        IngredientsViewAdapter adapter = new IngredientsViewAdapter(fridgeActivity);
+        adapter.setList(ingredients);
+
         rv.setAdapter(adapter);
         rv.setVisibility(View.VISIBLE);
         View loading = fridgeActivity.findViewById(R.id.fridgeLoadingPanel);
         loading.setVisibility(View.INVISIBLE);
 
-        fridgeActivity.updateIngredients(adapter, ingredients);
+        fridgeActivity.update(adapter, ingredients);
     }
 
 }

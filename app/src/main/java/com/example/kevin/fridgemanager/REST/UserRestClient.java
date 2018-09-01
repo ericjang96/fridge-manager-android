@@ -9,6 +9,7 @@ import com.example.kevin.fridgemanager.Adapters.GroceryListsViewAdapter;
 import com.example.kevin.fridgemanager.CallbackInterface.ILoginCallback;
 import com.example.kevin.fridgemanager.CallbackInterface.ISignUpCallback;
 import com.example.kevin.fridgemanager.DomainModels.GroceryList;
+import com.example.kevin.fridgemanager.DomainModels.RecyclerViewItem;
 import com.example.kevin.fridgemanager.DomainModels.User;
 import com.example.kevin.fridgemanager.Singletons.GlobalVariables;
 import com.example.kevin.fridgemanager.Singletons.SharedPrefs;
@@ -75,11 +76,13 @@ public class UserRestClient extends AbstractRestClient {
                 try {
                     JSONObject user = response.getJSONObject(0);
                     List<GroceryList> groceryLists = UserToGroceryListsTranslator.translate(user);
-                    GroceryListsViewAdapter adapter = new GroceryListsViewAdapter(groceryLists, rv.getContext());
+                    GroceryListsViewAdapter adapter = new GroceryListsViewAdapter(rv.getContext());
+                    adapter.setList(groceryLists);
+
                     rv.setAdapter(adapter);
                     rv.setVisibility(View.VISIBLE);
                     loading.setVisibility(View.INVISIBLE);
-                    activity.updateLists(adapter, groceryLists);
+                    activity.update(adapter, groceryLists);
 
                 } catch (JSONException e) {
                     e.printStackTrace();

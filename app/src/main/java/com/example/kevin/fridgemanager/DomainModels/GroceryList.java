@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Created by kevin on Aug 27, 2018
  **/
-public class GroceryList {
+public class GroceryList implements RecyclerViewItem{
     private String name;
     private String grocery_list_id;
     private List<GroceryItem> groceryItems;
